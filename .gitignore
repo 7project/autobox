@@ -199,3 +199,5 @@ mcp_config.json
 docker-compose.override.yml
 .docker/
 VPS_DEPLOYMENT_GUIDE.md
+CLAUDE.md
+

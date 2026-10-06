@@ -260,6 +260,7 @@ ${!detectedTg ? 'Обязательно предложи клиенту оста
         isRealAi = false;
       }
     } else {
+      console.warn("⚠️ [CHAT ROUTE] OPENROUTER_API_KEY is not defined in process.env or request body!");
       reply = SERVICE_FALLBACK_REPLY;
     }
 

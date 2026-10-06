@@ -119,7 +119,6 @@ export async function queryOpenRouter(
           messages,
           temperature: 0.3,
           max_tokens: 2500,
-          reasoning: { effort: "none" },
         }),
       });
 
@@ -176,7 +175,7 @@ export async function queryOpenRouter(
         cleaned = cleaned.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
 
         // If a model outputs internal thinking stream in English before Russian reply
-        if (/^(?:The user is|Here's a thinking|Thinking Process|Let me analyze|Let's structure|I need to)/i.test(cleaned)) {
+        if (/^(?:The user|We need|Here's a thinking|Thinking Process|Let me analyze|Let's structure|I need to|To respond to)/i.test(cleaned)) {
           const splitPoint = cleaned.search(/(?:\n\n|\n)(?:Здравствуйте|Добрый день|Приветствую|\*\*|[А-ЯЁ][а-яё]+)/);
           if (splitPoint !== -1 && splitPoint > 30) {
             cleaned = cleaned.slice(splitPoint).trim();
