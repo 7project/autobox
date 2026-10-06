@@ -109,15 +109,22 @@ export async function queryOpenRouter(
     const currentModel = prioritizedModels[i];
     const fallbackList = prioritizedModels.slice(i + 1);
 
+    const reqHeaders: Record<string, string> = {
+      Authorization: `Bearer ${token}`,
+      "HTTP-Referer": "https://autobox74.ru",
+      "X-Title": "AutoBox74 AI Consultant",
+      "Content-Type": "application/json",
+    };
+
+    const cfAigToken = process.env.CLOUDFLARE_AIG_TOKEN || process.env.CF_AIG_TOKEN;
+    if (cfAigToken) {
+      reqHeaders["cf-aig-authorization"] = `Bearer ${cfAigToken}`;
+    }
+
     try {
       const res = await fetch(chatCompletionsEndpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "HTTP-Referer": "https://autobox74.ru",
-          "X-Title": "AutoBox74 AI Consultant",
-          "Content-Type": "application/json",
-        },
+        headers: reqHeaders,
         body: JSON.stringify({
           model: currentModel,
           // OpenRouter native fallback routing: accepts at most 3 fallback models

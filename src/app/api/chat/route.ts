@@ -45,16 +45,23 @@ export async function GET(req: NextRequest) {
       : `${cleanBaseUrl}/chat/completions`;
     const token = process.env.OPENROUTER_API_KEY || "";
 
+    const testHeaders: Record<string, string> = {
+      Authorization: `Bearer ${token}`,
+      "HTTP-Referer": "https://autobox74.ru",
+      "X-Title": "AutoBox74 AI Diagnostic Ping",
+      "Content-Type": "application/json",
+    };
+
+    const cfAigToken = process.env.CLOUDFLARE_AIG_TOKEN || process.env.CF_AIG_TOKEN;
+    if (cfAigToken) {
+      testHeaders["cf-aig-authorization"] = `Bearer ${cfAigToken}`;
+    }
+
     const startTime = Date.now();
     try {
       const res = await fetch(testEndpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "HTTP-Referer": "https://autobox74.ru",
-          "X-Title": "AutoBox74 AI Diagnostic Ping",
-          "Content-Type": "application/json",
-        },
+        headers: testHeaders,
         body: JSON.stringify({
           model: "openrouter/free",
           messages: [{ role: "user", content: "ping" }],
