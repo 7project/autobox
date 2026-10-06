@@ -99,12 +99,18 @@ export async function queryOpenRouter(
 
   let lastError: Error | null = null;
 
+  const rawBaseUrl = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
+  const cleanBaseUrl = rawBaseUrl.replace(/\/+$/, "");
+  const chatCompletionsEndpoint = cleanBaseUrl.endsWith("/chat/completions")
+    ? cleanBaseUrl
+    : `${cleanBaseUrl}/chat/completions`;
+
   for (let i = 0; i < prioritizedModels.length; i++) {
     const currentModel = prioritizedModels[i];
     const fallbackList = prioritizedModels.slice(i + 1);
 
     try {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      const res = await fetch(chatCompletionsEndpoint, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
