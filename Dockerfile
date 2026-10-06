@@ -1,20 +1,16 @@
-# Stage 1: Dependencies
-FROM node:22-alpine AS deps
+# Stage 1: Builder (Dependencies + Compilation)
+FROM node:22-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Stage 2: Builder
-FROM node:22-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . ./
 
 # Disable Next.js telemetry and limit memory during build for low-RAM VPS
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=1024"
+ENV NODE_OPTIONS="--max-old-space-size=768"
 RUN npm run build
 
 # Stage 3: Runner (Production - Standalone)
