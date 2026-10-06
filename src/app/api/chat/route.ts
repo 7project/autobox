@@ -39,7 +39,10 @@ export async function GET(req: NextRequest) {
 
   if (isTest) {
     const rawBaseUrl = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
-    const cleanBaseUrl = rawBaseUrl.replace(/\/+$/, "");
+    let cleanBaseUrl = rawBaseUrl.replace(/\/+$/, "");
+    if (!cleanBaseUrl.includes("/v1") && !cleanBaseUrl.endsWith("/chat/completions")) {
+      cleanBaseUrl = `${cleanBaseUrl}/api/v1`;
+    }
     const testEndpoint = cleanBaseUrl.endsWith("/chat/completions")
       ? cleanBaseUrl
       : `${cleanBaseUrl}/chat/completions`;
