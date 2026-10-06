@@ -33,7 +33,71 @@ const SERVICE_FALLBACK_REPLY = `Здравствуйте! Мастер-приё�
 
 Пожалуйста, позвоните нам напрямую по номеру **+7 (995) 927-77-54** или оставьте ваш телефон и марку авто прямо здесь в чате — мастер свяжется с вами в течение 5 минут, ответит по запчастям и забронирует удобное время!`;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const isTest = searchParams.get("test") === "1" || searchParams.get("ping") === "1";
+
+  if (isTest) {
+    const rawBaseUrl = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
+    const cleanBaseUrl = rawBaseUrl.replace(/\/+$/, "");
+    const testEndpoint = cleanBaseUrl.endsWith("/chat/completions")
+      ? cleanBaseUrl
+      : `${cleanBaseUrl}/chat/completions`;
+    const token = process.env.OPENROUTER_API_KEY || "";
+
+    const startTime = Date.now();
+    try {
+      const res = await fetch(testEndpoint, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "HTTP-Referer": "https://autobox74.ru",
+          "X-Title": "AutoBox74 AI Diagnostic Ping",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openrouter/free",
+          messages: [{ role: "user", content: "ping" }],
+          max_tokens: 10,
+        }),
+      });
+
+      const latencyMs = Date.now() - startTime;
+      const resText = await res.text();
+      let resJson = null;
+      try {
+        resJson = JSON.parse(resText);
+      } catch {}
+
+      return NextResponse.json({
+        pingSuccess: res.ok,
+        httpStatus: res.status,
+        statusText: res.statusText,
+        latencyMs,
+        endpointUsed: testEndpoint,
+        isCustomGateway: Boolean(process.env.OPENROUTER_BASE_URL),
+        apiKeyPresent: Boolean(token),
+        keyPrefix: token ? `${token.slice(0, 10)}...` : "NONE",
+        response: resJson || resText.slice(0, 300),
+        supabaseConnected: isSupabaseConfigured,
+      });
+    } catch (err: any) {
+      return NextResponse.json(
+        {
+          pingSuccess: false,
+          latencyMs: Date.now() - startTime,
+          endpointUsed: testEndpoint,
+          isCustomGateway: Boolean(process.env.OPENROUTER_BASE_URL),
+          apiKeyPresent: Boolean(token),
+          errorMessage: err.message,
+          errorCause: err.cause ? String(err.cause) : undefined,
+          errorStack: err.stack,
+        },
+        { status: 502 }
+      );
+    }
+  }
+
   return NextResponse.json({
     models: FREE_MODELS,
     supabaseConnected: isSupabaseConfigured,
