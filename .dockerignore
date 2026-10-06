@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+.env*
+*.log
+leads_mail_log.txt
+VPS_DEPLOYMENT_GUIDE.md

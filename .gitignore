@@ -198,3 +198,4 @@ mcp_config.json
 # Docker локальные конфигурации
 docker-compose.override.yml
 .docker/
+VPS_DEPLOYMENT_GUIDE.md
