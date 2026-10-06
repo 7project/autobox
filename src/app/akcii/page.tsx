@@ -126,7 +126,7 @@ export default function AkciiPage() {
                   </span>
                 </div>
                 <Link
-                  href="/kontakty?promo=Бесплатная%20диагностика%20подвески%20на%20вибростенде%20(0%20₽)"
+                  href="/#ai-consultant?promo=Бесплатная%20диагностика%20подвески%20на%20вибростенде%20(0%20₽)"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
                 >
                   <span>Записаться по акции</span>
@@ -231,7 +231,7 @@ export default function AkciiPage() {
                 <span className="text-base text-[var(--muted-foreground)] line-through">2 900 ₽</span>
               </div>
               <Link
-                href="/kontakty?promo=Пакет%20Сезонное%20ТО%20+%20Компьютерная%20диагностика%20(1%20900%20₽)"
+                href="/#ai-consultant?promo=Пакет%20Сезонное%20ТО%20+%20Компьютерная%20диагностика%20(1%20900%20₽)"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--secondary)] px-5 py-2.5 text-xs sm:text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] border border-[var(--border)] transition-all"
               >
                 <span>Выбрать пакет</span>
@@ -285,7 +285,7 @@ export default function AkciiPage() {
 
             <div className="pt-6 mt-6 border-t border-slate-200">
               <Link
-                href="/kontakty?promo=Скидка%2010%%20на%20первый%20визит%20(промокод%20АВТОБОКС2025)"
+                href="/#ai-consultant?promo=Скидка%2010%%20на%20первый%20визит%20(промокод%20АВТОБОКС2025)"
                 className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold shadow-md hover:bg-slate-800 transition-all hover:scale-[1.02]"
               >
                 <span>Забронировать с промокодом</span>
@@ -313,7 +313,7 @@ export default function AkciiPage() {
           </div>
           <div className="shrink-0">
             <Link
-              href="/kontakty?promo=Восстановление%204-х%20стоек%20по%20цене%203-х"
+              href="/#ai-consultant?promo=Восстановление%204-х%20стоек%20по%20цене%203-х"
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-105"
             >
               <span>Записаться на 4 стойки</span>

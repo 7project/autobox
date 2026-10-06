@@ -126,38 +126,61 @@ export function AiAutoConsultant() {
     }
 
     // Pre-fill input from URL search params (redirected from services, prices, promos, etc.)
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const serviceParam = params.get("service");
-      const promoParam = params.get("promo");
-      const fromParam = params.get("from");
-      const carParam = params.get("car");
-      const lockPriceParam = params.get("lockPrice") || params.get("price");
-      const symptomParam = params.get("symptom");
+    const checkParamsAndFill = () => {
+      try {
+        const searchString =
+          window.location.search ||
+          (window.location.hash.includes("?")
+            ? window.location.hash.split("?")[1]
+            : "");
+        const params = new URLSearchParams(searchString);
+        const serviceParam = params.get("service");
+        const promoParam = params.get("promo");
+        const fromParam = params.get("from");
+        const carParam = params.get("car");
+        const lockPriceParam = params.get("lockPrice") || params.get("price");
+        const symptomParam = params.get("symptom");
 
-      if (lockPriceParam) {
-        const total = parseInt(lockPriceParam, 10);
-        const car = carParam || "автомобиль";
-        const symptom = symptomParam || serviceParam || "ремонт и обслуживание";
-        if (!isNaN(total) && total > 0) {
-          setFixedPriceInfo({ price: total, car, symptom });
-          setInput(`Здравствуйте! Хочу зафиксировать цену ${total.toLocaleString("ru-RU")} ₽ на ${symptom} для ${car}. Помогите согласовать удобное время для записи.`);
-          setContextSource(`Фиксация цены: ${total.toLocaleString("ru-RU")} ₽`);
+        if (lockPriceParam) {
+          const total = parseInt(lockPriceParam, 10);
+          const car = carParam || "автомобиль";
+          const symptom = symptomParam || serviceParam || "ремонт и обслуживание";
+          if (!isNaN(total) && total > 0) {
+            setFixedPriceInfo({ price: total, car, symptom });
+            setInput(
+              `Здравствуйте! Хочу зафиксировать цену ${total.toLocaleString(
+                "ru-RU"
+              )} ₽ на ${symptom} для ${car}. Помогите согласовать удобное время для записи.`
+            );
+            setContextSource(`Фиксация цены: ${total.toLocaleString("ru-RU")} ₽`);
+          }
+        } else if (promoParam) {
+          setInput(
+            `Здравствуйте! Хочу записаться по акции: «${promoParam}». Подскажите свободное время для визита.`
+          );
+          setContextSource(`Акция: ${promoParam}`);
+        } else if (serviceParam) {
+          setInput(
+            `Здравствуйте! Хочу записаться на услугу: «${serviceParam}». Какая ориентировочная стоимость и на когда можно записаться?`
+          );
+          setContextSource(`Услуга: ${serviceParam}`);
+        } else if (carParam) {
+          setInput(
+            `Здравствуйте! У меня ${carParam}. Хочу записаться на диагностику и сервис.`
+          );
+          setContextSource(`Автомобиль: ${carParam}`);
+        } else if (fromParam) {
+          setInput(
+            `Здравствуйте! Хочу записаться на осмотр и обслуживание автомобиля.`
+          );
+          setContextSource(`Раздел сайта: ${fromParam}`);
         }
-      } else if (promoParam) {
-        setInput(`Здравствуйте! Хочу записаться по акции: «${promoParam}». Подскажите свободное время для визита.`);
-        setContextSource(`Акция: ${promoParam}`);
-      } else if (serviceParam) {
-        setInput(`Здравствуйте! Хочу записаться на услугу: «${serviceParam}». Какая ориентировочная стоимость и на когда можно записаться?`);
-        setContextSource(`Услуга: ${serviceParam}`);
-      } else if (carParam) {
-        setInput(`Здравствуйте! У меня ${carParam}. Хочу записаться на диагностику и сервис.`);
-        setContextSource(`Автомобиль: ${carParam}`);
-      } else if (fromParam) {
-        setInput(`Здравствуйте! Хочу записаться на осмотр и обслуживание автомобиля.`);
-        setContextSource(`Раздел сайта: ${fromParam}`);
-      }
-    } catch {}
+      } catch {}
+    };
+
+    checkParamsAndFill();
+    window.addEventListener("hashchange", checkParamsAndFill);
+    window.addEventListener("popstate", checkParamsAndFill);
 
     // Global listener for locking in price from symptom calculator or contact forms
     const handleLockInPriceEvent = (e: any) => {
@@ -183,12 +206,22 @@ export function AiAutoConsultant() {
       }
 
       // Smooth scroll to consultant container
-      const container = document.getElementById("ai-chat") || document.getElementById("ai-consultant");
+      const container =
+        document.getElementById("ai-chat") ||
+        document.getElementById("ai-consultant");
       if (container) {
         container.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      const promptText = `Здравствуйте! Прошу зафиксировать специальную цену ${total ? `${total.toLocaleString("ru-RU")} ₽` : ""} на «${symptom}» для ${car}.${workCost ? ` [Смета: работы ${workCost} ₽, детали ${partsCost || 0} ₽].` : ""}${phone ? ` Мой телефон: ${phone}.` : ""}${telegram ? ` Telegram: ${telegram}.` : ""} Пожалуйста, внесите бронь в базу автосервиса и согласуйте удобное время для визита!`;
+      const promptText = `Здравствуйте! Прошу зафиксировать специальную цену ${
+        total ? `${total.toLocaleString("ru-RU")} ₽` : ""
+      } на «${symptom}» для ${car}.${
+        workCost
+          ? ` [Смета: работы ${workCost} ₽, детали ${partsCost || 0} ₽].`
+          : ""
+      }${phone ? ` Мой телефон: ${phone}.` : ""}${
+        telegram ? ` Telegram: ${telegram}.` : ""
+      } Пожалуйста, внесите бронь в базу автосервиса и согласуйте удобное время для визита!`;
 
       setInput(promptText);
       setTimeout(() => {
@@ -196,7 +229,10 @@ export function AiAutoConsultant() {
       }, 300);
     };
 
-    window.addEventListener("autobox_lock_in_price", handleLockInPriceEvent as any);
+    window.addEventListener(
+      "autobox_lock_in_price",
+      handleLockInPriceEvent as any
+    );
 
     // Close dropdown on outside click
     const handleClickOutside = (e: MouseEvent) => {
@@ -209,7 +245,12 @@ export function AiAutoConsultant() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      window.removeEventListener("autobox_lock_in_price", handleLockInPriceEvent as any);
+      window.removeEventListener("hashchange", checkParamsAndFill);
+      window.removeEventListener("popstate", checkParamsAndFill);
+      window.removeEventListener(
+        "autobox_lock_in_price",
+        handleLockInPriceEvent as any
+      );
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -462,7 +503,7 @@ export function AiAutoConsultant() {
     FREE_MODELS_LIST.find((m) => m.id === selectedModel) || FREE_MODELS_LIST[0];
 
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-xl overflow-hidden flex flex-col h-[600px]">
+    <div id="ai-chat" className="rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-xl overflow-hidden flex flex-col h-[600px] scroll-mt-20">
       {/* Bot Header */}
       <div className="px-4 sm:px-5 py-3 border-b border-[var(--border)] bg-[var(--secondary)] flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 min-w-0">

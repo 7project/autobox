@@ -291,7 +291,7 @@ export default function GalereyaPage() {
                     </span>
                   </div>
                   <Link
-                    href={`/kontakty?service=${encodeURIComponent(item.serviceBooking)}`}
+                    href={`/#ai-consultant?service=${encodeURIComponent(item.serviceBooking)}`}
                     className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-105"
                   >
                     <span>Записаться</span>
@@ -330,7 +330,7 @@ export default function GalereyaPage() {
               </div>
               <div className="pt-3">
                 <Link
-                  href="/kontakty?service=Бесплатная%20диагностика%20ходовой%20в%20ремзоне"
+                  href="/#ai-consultant?service=Бесплатная%20диагностика%20ходовой%20в%20ремзоне"
                   className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
                 >
                   <span>Записаться на осмотр в боксе</span>

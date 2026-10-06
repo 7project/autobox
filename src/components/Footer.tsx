@@ -164,7 +164,7 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <span>ул. Печёнкина, 1а</span>
             <span>•</span>
-            <Link href="/kontakty" className="hover:text-[var(--primary)] transition-colors">
+            <Link href="/#ai-consultant" className="hover:text-[var(--primary)] transition-colors">
               Онлайн AI-консультант
             </Link>
           </div>

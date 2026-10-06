@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Phone, Wrench, MessageCircle, Send } from "lucide-react";
+import { Menu, X, Phone, Wrench, MessageCircle, Send, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
@@ -104,10 +104,11 @@ export function Header() {
 
             {/* CTA */}
             <Link
-              href="/kontakty?service=Онлайн-консультация%20и%20запись%20на%20сервис"
-              className="rounded-lg bg-[var(--primary)] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all"
+              href="/#ai-consultant"
+              className="rounded-lg bg-[var(--primary)] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center gap-1.5"
             >
-              Консультант 24/7
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Консультант 24/7</span>
             </Link>
           </div>
 
@@ -142,11 +143,12 @@ export function Header() {
           </nav>
           <div className="pt-2">
             <Link
-              href="/kontakty?service=Онлайн-консультация%20и%20запись%20на%20сервис"
+              href="/#ai-consultant"
               onClick={() => setMobileOpen(false)}
-              className="block w-full text-center rounded-lg bg-[var(--primary)] py-2.5 text-sm font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all"
+              className="w-full text-center rounded-lg bg-[var(--primary)] py-2.5 text-sm font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center justify-center gap-1.5"
             >
-              Консультант 24/7 (Записаться)
+              <Sparkles className="h-4 w-4" />
+              <span>AI-Консультант 24/7 (Записаться)</span>
             </Link>
           </div>
           <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between">

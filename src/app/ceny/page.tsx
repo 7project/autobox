@@ -102,7 +102,7 @@ export default function CenyPage() {
                   {cat.category}
                 </h2>
                 <Link
-                  href={`/kontakty?service=${encodeURIComponent(cat.category)}`}
+                  href={`/#ai-consultant?service=${encodeURIComponent(cat.category)}`}
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all flex items-center gap-1 shrink-0"
                   title={`Записаться: ${cat.category}`}
                 >
@@ -154,7 +154,7 @@ export default function CenyPage() {
               Написать в WhatsApp
             </a>
             <Link
-              href="/kontakty?service=Запись%20на%20диагностику%20и%20расчет%20стоимости"
+              href="/#ai-consultant?service=Запись%20на%20диагностику%20и%20расчет%20стоимости"
               className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] hover:border-[var(--primary)] transition-all"
             >
               Записаться на диагностику

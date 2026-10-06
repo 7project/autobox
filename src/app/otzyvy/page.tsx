@@ -149,7 +149,7 @@ export default function OtzyvyPage() {
             Запишитесь на осмотр или ремонт в Автобокс74rus на ул. Печёнкина, 1а
           </p>
           <Link
-            href="/kontakty?service=Запись%20на%20осмотр%20и%20ремонт%20по%20отзывам"
+            href="/#ai-consultant?service=Запись%20на%20осмотр%20и%20ремонт%20по%20отзывам"
             className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-8 py-3 text-sm font-semibold text-white shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90"
           >
             Записаться в автосервис

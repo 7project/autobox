@@ -109,7 +109,7 @@ export default function ONasPage() {
 
             <div className="pt-2">
               <Link
-                href="/kontakty?service=Запись%20на%20осмотр%20и%20консультацию"
+                href="/#ai-consultant?service=Запись%20на%20осмотр%20и%20консультацию"
                 className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
               >
                 <span>Записаться в сервис</span>

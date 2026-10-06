@@ -143,7 +143,7 @@ export default function HomePage() {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
-                  href="/kontakty?service=Запись%20на%20диагностику"
+                  href="/#ai-consultant?service=Запись%20на%20диагностику"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--primary)] text-white text-sm font-bold shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 hover:scale-[1.02] transition-transform"
                 >
                   <Clock className="h-4 w-4" />
@@ -204,7 +204,7 @@ export default function HomePage() {
                 {/* Quick 1-click booking redirect */}
                 <div className="space-y-2.5">
                   <Link
-                    href="/kontakty?service=Срочная%20запись%20на%20подъемник"
+                    href="/#ai-consultant?service=Срочная%20запись%20на%20подъемник"
                     className="w-full py-3.5 px-4 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-lg"
                   >
                     <span>Забронировать пост в 1 клик</span>
@@ -264,7 +264,7 @@ export default function HomePage() {
       </section>
 
       {/* AI BOT CONSULTANT SECTION (Above services as requested) */}
-      <section id="ai-consultant" className="py-16 sm:py-20 bg-[var(--card)] border-y border-[var(--border)]">
+      <section id="ai-consultant" className="py-16 sm:py-20 bg-[var(--card)] border-y border-[var(--border)] scroll-mt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-5 space-y-5">
@@ -343,7 +343,7 @@ export default function HomePage() {
               return (
                 <Link
                   key={s.title}
-                  href={`/kontakty?service=${encodeURIComponent(s.title)}`}
+                  href={`/#ai-consultant?service=${encodeURIComponent(s.title)}`}
                   className="group rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6 transition-all hover:border-[var(--primary)]/50 hover:shadow-lg flex flex-col justify-between"
                   title={`Записаться на ${s.title}`}
                 >

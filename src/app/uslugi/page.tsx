@@ -260,7 +260,7 @@ export default function UslugiPage() {
                 <span className="text-xl font-black text-[var(--primary)]">0 ₽ вместо 800 ₽</span>
               </div>
               <Link
-                href="/kontakty?service=Бесплатная%20диагностика%20подвески"
+                href="/#ai-consultant?promo=Бесплатная%20диагностика%20подвески"
                 className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-transform active:scale-95"
               >
                 <span>Записаться</span>
@@ -290,7 +290,7 @@ export default function UslugiPage() {
                 <span className="text-xl font-black text-[var(--foreground)]">от 2 400 ₽ за 4 стойки</span>
               </div>
               <Link
-                href="/kontakty?service=Прокачка%204%20стоек%20по%20цене%203-х"
+                href="/#ai-consultant?promo=Прокачка%204%20стоек%20по%20цене%203-х"
                 className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
               >
                 <span>Забронировать слот</span>
@@ -400,7 +400,7 @@ export default function UslugiPage() {
                   </div>
 
                   <Link
-                    href={`/kontakty?service=${encodeURIComponent(service.title)}`}
+                    href={`/#ai-consultant?service=${encodeURIComponent(service.title)}`}
                     className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[var(--primary)] text-white text-xs sm:text-sm font-bold shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-[1.01]"
                   >
                     <span>Записаться со скидкой 10%</span>
@@ -429,7 +429,7 @@ export default function UslugiPage() {
               Спросить AI-консультанта
             </Link>
             <Link
-              href="/kontakty?service=Индивидуальный%20расчет%20ремонта"
+              href="/#ai-consultant?service=Индивидуальный%20расчет%20ремонта"
               className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-3 text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] transition-all"
             >
               Записаться на осмотр
