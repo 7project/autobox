@@ -1,6 +1,89 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ==============================================================================
+# AUTOBOX74 - .GITIGNORE (БЕЗОПАСНОСТЬ, ПРИВАТНЫЕ ДАННЫЕ И СЕКРЕТЫ)
+# ==============================================================================
+# По стандартам безопасности OWASP, GitHub Security & Next.js Best Practices
+# Гарантирует, что API-ключи, телефоны, лиды клиентов, токены и системные файлы
+# никогда не попадут в публичный репозиторий Git.
 
-# dependencies
+# ------------------------------------------------------------------------------
+# 1. ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ, ТОКЕНЫ И КЛЮЧИ (ENVIRONMENT & SECRETS)
+# ------------------------------------------------------------------------------
+.env
+.env*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.local
+
+# Сертификаты, приватные и публичные SSH/SSL ключи
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.pub
+id_rsa*
+id_ed25519*
+id_dsa*
+id_ecdsa*
+*.keystore
+
+# Токены авторизации и сервисные аккаунты облаков
+credentials.json
+client_secret*.json
+service-account*.json
+service_account*.json
+supabase-keys*.json
+tokens.json
+auth.json
+*.token
+
+# ------------------------------------------------------------------------------
+# 2. ЛОГИ, ДАННЫЕ ЛИДОВ И ПЕРСОНАЛЬНЫЕ ДАННЫЕ (LOGS & SENSITIVE DATA)
+# ------------------------------------------------------------------------------
+# Логи запросов, ошибок и отправок почты (содержат контакты клиентов и трейсы)
+leads_mail_log.txt
+openrouter_errors.log
+*_log.txt
+*_errors.txt
+*.log
+logs/
+*.log.*
+
+# Логи пакетных менеджеров
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Временные и тестовые скрипты разработки
+scripts/test-*.mjs
+scripts/test-*.js
+scripts/download_*.js
+scripts/inspect_*.js
+scripts/list_*.js
+scripts/verify-*.mjs
+scripts/create-leads-table.mjs
+scripts/update-schema.mjs
+
+# Локальные базы данных, дампы и бэкапы
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.dump
+*.backup
+*.sql.gz
+*.sql.bak
+
+# ------------------------------------------------------------------------------
+# 3. ЗАВИСИМОСТИ (DEPENDENCIES)
+# ------------------------------------------------------------------------------
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +93,108 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# ------------------------------------------------------------------------------
+# 4. СБОРКА NEXT.JS, TYPESCRIPT & PRODUCTION ARTIFACTS
+# ------------------------------------------------------------------------------
 /.next/
 /out/
-
-# production
 /build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+/dist
 *.tsbuildinfo
 next-env.d.ts
+
+# Тестирование и отчеты покрытия кода
+/coverage
+*.lcov
+.nyc_output
+
+# Vercel
+.vercel
+
+# ------------------------------------------------------------------------------
+# 5. РЕДАКТОРЫ КОДА И IDE (EDITORS & SYSTEM CONFIGS)
+# ------------------------------------------------------------------------------
+# JetBrains (WebStorm, IntelliJ IDEA, PhpStorm)
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code (исключаем настройки рабочего пространства)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Временные файлы редакторов, резервные копии
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp
+*.patch
+
+# ------------------------------------------------------------------------------
+# 6. ОПЕРАЦИОННЫЕ СИСТЕМЫ (WINDOWS & MACOS)
+# ------------------------------------------------------------------------------
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ------------------------------------------------------------------------------
+# 7. AI АГЕНТЫ, СУБАГЕНТЫ, ИНСТРУКЦИИ И MCP (ПОЛНОЕ СКРЫТИЕ AI-РАЗРАБОТКИ)
+# ------------------------------------------------------------------------------
+# Antigravity, Gemini, DeepMind, субагенты и кастомные правила
+.agents/
+.agent/
+_agents/
+_agent/
+.gemini/
+GEMINI.md
+AGENTS.md
+*transcript*.jsonl
+*.trace
+
+# Stitch AI (генерации экранов, токены, дизайн-манифесты и скрипты)
+.stitch/
+stitch_download/
+*stitch*
+DESIGN.md
+
+# Claude, Anthropic, Cursor, Windsurf, Copilot, Cline, Roo
+.claude/
+CLAUDE.md
+.cursor/
+.cursorrules
+.windsurf/
+.copilot/
+.chat/
+.ai/
+.cline/
+.roo/
+*.prompt
+*.prompts
+*.llm*
+*.chat
+
+# MCP (Model Context Protocol) серверы и sidecars
+.mcp/
+mcp_config.json
+*.mcp.json
+
+# Docker локальные конфигурации
+docker-compose.override.yml
+.docker/
