@@ -8,6 +8,25 @@ import {
   SALES_BOOKING_SCRIPT,
   SESSION_SETTINGS,
 } from "@/config/ai.config";
+import { ProxyAgent } from "undici";
+
+/**
+ * Returns a ProxyAgent dispatcher if OPENROUTER_PROXY, HTTPS_PROXY, or HTTP_PROXY is defined.
+ * Supports http://, https://, and socks5:// proxies.
+ */
+export function getOpenRouterDispatcher() {
+  const proxyUrl =
+    process.env.OPENROUTER_PROXY ||
+    process.env.HTTPS_PROXY ||
+    process.env.HTTP_PROXY;
+  if (!proxyUrl) return undefined;
+  try {
+    return new ProxyAgent(proxyUrl);
+  } catch (err) {
+    console.error("⚠️ [OPENROUTER PROXY ERROR]: Failed to initialize ProxyAgent:", err);
+    return undefined;
+  }
+}
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -125,6 +144,7 @@ export async function queryOpenRouter(
     }
 
     try {
+      const dispatcher = getOpenRouterDispatcher();
       const res = await fetch(chatCompletionsEndpoint, {
         method: "POST",
         headers: reqHeaders,
@@ -136,7 +156,8 @@ export async function queryOpenRouter(
           temperature: 0.3,
           max_tokens: 2500,
         }),
-      });
+        ...(dispatcher ? { dispatcher } : {}),
+      } as any);
 
       if (!res.ok) {
         const errText = await res.text();

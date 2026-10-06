@@ -3,6 +3,7 @@ import {
   AUTOBOX_SYSTEM_PROMPT,
   ChatMessage,
   FREE_MODELS,
+  getOpenRouterDispatcher,
   logOpenRouterError,
   queryOpenRouter,
 } from "@/lib/openrouter";
@@ -62,15 +63,17 @@ export async function GET(req: NextRequest) {
 
     const startTime = Date.now();
     try {
+      const dispatcher = getOpenRouterDispatcher();
       const res = await fetch(testEndpoint, {
         method: "POST",
         headers: testHeaders,
         body: JSON.stringify({
-          model: "openrouter/free",
+          model: "openai/gpt-3.5-turbo",
           messages: [{ role: "user", content: "ping" }],
           max_tokens: 10,
         }),
-      });
+        ...(dispatcher ? { dispatcher } : {}),
+      } as any);
 
       const latencyMs = Date.now() - startTime;
       const resText = await res.text();
@@ -85,6 +88,7 @@ export async function GET(req: NextRequest) {
         statusText: res.statusText,
         latencyMs,
         endpointUsed: testEndpoint,
+        proxyActive: Boolean(process.env.OPENROUTER_PROXY || process.env.HTTPS_PROXY),
         isCustomGateway: Boolean(process.env.OPENROUTER_BASE_URL),
         apiKeyPresent: Boolean(token),
         keyPrefix: token ? `${token.slice(0, 10)}...` : "NONE",
