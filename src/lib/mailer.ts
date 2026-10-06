@@ -11,7 +11,7 @@ export interface DialogLeadPayload {
   source?: string;
 }
 
-export const TARGET_TEST_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || "millimetro@mail.ru";
+export const TARGET_TEST_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || process.env.NOTIFICATION_EMAIL || "info@autobox74.ru";
 
 export async function sendLeadNotificationEmail(payload: DialogLeadPayload): Promise<{ success: boolean; mode: string; message: string }> {
   const recipient = TARGET_TEST_EMAIL;

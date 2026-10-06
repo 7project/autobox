@@ -962,7 +962,7 @@ export default function KontaktyPage() {
                         type="text"
                         value={customCarInput}
                         onChange={(e) => setCustomCarInput(e.target.value)}
-                        placeholder="Уточните модель и год (например: Honda Civic 2008 1.8 или Lada Vesta SW)"
+                        placeholder="Уточните модель и год (например: Toyota Camry 2018 2.5 или Lada Vesta SW)"
                         className="w-full px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] text-xs placeholder:text-[var(--muted-foreground)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                       />
                       <Car className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--muted-foreground)] pointer-events-none" />
