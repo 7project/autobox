@@ -13,7 +13,6 @@ import {
   MapPin,
   Clock,
   Phone,
-  MessageCircle,
   PackageCheck,
   Bot,
   Sparkles,

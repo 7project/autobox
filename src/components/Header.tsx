@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Phone, Wrench, MessageCircle, Send, Sparkles } from "lucide-react";
+import { Menu, X, Phone, Wrench, Send, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { BookingConsultantButton } from "./BookingConsultantButton";
 
@@ -62,15 +62,6 @@ export function Header() {
           <div className="hidden xl:flex items-center gap-2.5 shrink-0">
             {/* Social / Messengers Mini-Pills */}
             <div className="flex items-center gap-1.5 pr-2 border-r border-[var(--border)]">
-              <a
-                href="https://wa.me/79959277754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-8 w-8 rounded-lg border border-[var(--border)] bg-[var(--secondary)] flex items-center justify-center text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
-                title="WhatsApp"
-              >
-                <MessageCircle className="h-4 w-4" />
-              </a>
               <a
                 href="https://t.me/+79959277754"
                 target="_blank"
@@ -170,15 +161,6 @@ export function Header() {
               +7 (995) 927-77-54
             </a>
             <div className="flex items-center gap-1.5">
-              <a
-                href="https://wa.me/79959277754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-[var(--secondary)] text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
-                title="WhatsApp"
-              >
-                <MessageCircle className="h-4 w-4" />
-              </a>
               <a
                 href="https://t.me/+79959277754"
                 target="_blank"

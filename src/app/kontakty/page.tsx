@@ -7,7 +7,6 @@ import {
   MapPin,
   Phone,
   Clock,
-  MessageCircle,
   ExternalLink,
   Send,
   Sparkles,

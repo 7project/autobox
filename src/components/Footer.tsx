@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wrench, Phone, MapPin, Clock, MessageCircle, Send, ExternalLink } from "lucide-react";
+import { Wrench, Phone, MapPin, Clock, Send, ExternalLink } from "lucide-react";
 import { BookingConsultantButton } from "./BookingConsultantButton";
 
 const services = [
@@ -42,15 +42,6 @@ export function Footer() {
             </p>
             {/* Custom compact social buttons */}
             <div className="flex items-center gap-2 pt-1">
-              <a
-                href="https://wa.me/79959277754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-8 w-8 rounded-lg border border-[var(--border)] bg-[var(--secondary)] flex items-center justify-center text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
-                title="WhatsApp"
-              >
-                <MessageCircle className="h-4 w-4" />
-              </a>
               <a
                 href="https://t.me/+79959277754"
                 target="_blank"
