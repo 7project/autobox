@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wrench, Phone, MapPin, Clock, MessageCircle, Send, ExternalLink } from "lucide-react";
+import { BookingConsultantButton } from "./BookingConsultantButton";
 
 const services = [
   "Ремонт ходовой части и стоек",
@@ -164,9 +165,13 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <span>ул. Печёнкина, 1а</span>
             <span>•</span>
-            <Link href="/#ai-consultant" className="hover:text-[var(--primary)] transition-colors">
+            <BookingConsultantButton
+              from="Подвал сайта (Footer)"
+              prompt="Здравствуйте! Хочу записаться на диагностику и сервис в Автобокс74 на ул. Печёнкина, 1а."
+              className="hover:text-[var(--primary)] transition-colors cursor-pointer"
+            >
               Онлайн AI-консультант
-            </Link>
+            </BookingConsultantButton>
           </div>
         </div>
       </div>

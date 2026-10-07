@@ -12,6 +12,7 @@ import {
   Check,
   Sparkles,
   Coins,
+  X,
 } from "lucide-react";
 
 interface Message {
@@ -134,6 +135,7 @@ export function AiAutoConsultant() {
             ? window.location.hash.split("?")[1]
             : "");
         const params = new URLSearchParams(searchString);
+        const promptParam = params.get("prompt");
         const serviceParam = params.get("service");
         const promoParam = params.get("promo");
         const fromParam = params.get("from");
@@ -141,7 +143,16 @@ export function AiAutoConsultant() {
         const lockPriceParam = params.get("lockPrice") || params.get("price");
         const symptomParam = params.get("symptom");
 
-        if (lockPriceParam) {
+        let didFill = false;
+
+        if (promptParam) {
+          setInput(promptParam);
+          if (serviceParam) setContextSource(`Услуга: ${serviceParam}`);
+          else if (promoParam) setContextSource(`Акция: ${promoParam}`);
+          else if (fromParam) setContextSource(fromParam);
+          else setContextSource("Запись на сервис");
+          didFill = true;
+        } else if (lockPriceParam) {
           const total = parseInt(lockPriceParam, 10);
           const car = carParam || "автомобиль";
           const symptom = symptomParam || serviceParam || "ремонт и обслуживание";
@@ -153,27 +164,44 @@ export function AiAutoConsultant() {
               )} ₽ на ${symptom} для ${car}. Помогите согласовать удобное время для записи.`
             );
             setContextSource(`Фиксация цены: ${total.toLocaleString("ru-RU")} ₽`);
+            didFill = true;
           }
         } else if (promoParam) {
           setInput(
             `Здравствуйте! Хочу записаться по акции: «${promoParam}». Подскажите свободное время для визита.`
           );
           setContextSource(`Акция: ${promoParam}`);
+          didFill = true;
         } else if (serviceParam) {
           setInput(
             `Здравствуйте! Хочу записаться на услугу: «${serviceParam}». Какая ориентировочная стоимость и на когда можно записаться?`
           );
           setContextSource(`Услуга: ${serviceParam}`);
+          didFill = true;
         } else if (carParam) {
           setInput(
             `Здравствуйте! У меня ${carParam}. Хочу записаться на диагностику и сервис.`
           );
           setContextSource(`Автомобиль: ${carParam}`);
+          didFill = true;
         } else if (fromParam) {
           setInput(
             `Здравствуйте! Хочу записаться на осмотр и обслуживание автомобиля.`
           );
           setContextSource(`Раздел сайта: ${fromParam}`);
+          didFill = true;
+        }
+
+        if (didFill) {
+          setTimeout(() => {
+            const container =
+              document.getElementById("ai-consultant") ||
+              document.getElementById("ai-chat");
+            if (container) {
+              container.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            inputRef.current?.focus();
+          }, 350);
         }
       } catch {}
     };
@@ -181,6 +209,31 @@ export function AiAutoConsultant() {
     checkParamsAndFill();
     window.addEventListener("hashchange", checkParamsAndFill);
     window.addEventListener("popstate", checkParamsAndFill);
+
+    // Global listener for navigating and pre-filling from any button
+    const handlePrefillEvent = (e: any) => {
+      const data = e.detail;
+      if (!data) return;
+      if (data.prompt) setInput(data.prompt);
+      if (data.sourceBadge) setContextSource(data.sourceBadge);
+      else if (data.service) setContextSource(`Услуга: ${data.service}`);
+      else if (data.promo) setContextSource(`Акция: ${data.promo}`);
+
+      const container =
+        document.getElementById("ai-consultant") ||
+        document.getElementById("ai-chat");
+      if (container) {
+        container.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 250);
+    };
+
+    window.addEventListener(
+      "autobox:prefill-consultant",
+      handlePrefillEvent as any
+    );
 
     // Global listener for locking in price from symptom calculator or contact forms
     const handleLockInPriceEvent = (e: any) => {
@@ -247,6 +300,10 @@ export function AiAutoConsultant() {
     return () => {
       window.removeEventListener("hashchange", checkParamsAndFill);
       window.removeEventListener("popstate", checkParamsAndFill);
+      window.removeEventListener(
+        "autobox:prefill-consultant",
+        handlePrefillEvent as any
+      );
       window.removeEventListener(
         "autobox_lock_in_price",
         handleLockInPriceEvent as any
@@ -845,19 +902,37 @@ export function AiAutoConsultant() {
             aria-hidden="true"
           />
 
-          <input
-            ref={inputRef}
-            type="text"
-            maxLength={600}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={
-              cooldownLeft > 0
-                ? `Подождите ${cooldownLeft} сек...`
-                : "Спросите о цене, стойках или введите артикул детали..."
-            }
-            className="flex-1 rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition"
-          />
+          <div className="relative flex-1 flex items-center">
+            <input
+              ref={inputRef}
+              type="text"
+              maxLength={600}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={
+                cooldownLeft > 0
+                  ? `Подождите ${cooldownLeft} сек...`
+                  : "Спросите о цене, стойках или введите артикул детали..."
+              }
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card)] pl-4 pr-10 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition"
+            />
+            {input.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setInput("");
+                  setContextSource(null);
+                  setFixedPriceInfo(null);
+                  inputRef.current?.focus();
+                }}
+                className="absolute right-2.5 p-1 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)] transition-colors cursor-pointer"
+                title="Очистить сообщение"
+                aria-label="Очистить поле ввода"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           <button
             type="submit"
             disabled={!input.trim() || cooldownLeft > 0}

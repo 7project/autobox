@@ -16,6 +16,7 @@ import {
   Coins,
   Filter,
 } from "lucide-react";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 interface CaseStudy {
   id: string;
@@ -290,13 +291,15 @@ export default function GalereyaPage() {
                       {item.price}
                     </span>
                   </div>
-                  <Link
-                    href={`/#ai-consultant?service=${encodeURIComponent(item.serviceBooking)}`}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-105"
+                  <BookingConsultantButton
+                    service={item.serviceBooking}
+                    from="Галерея выполненных работ"
+                    prompt={`Здравствуйте! Хочу записаться на услугу как в кейсе: «${item.serviceBooking}». Автомобиль: ${item.car}.`}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-105 cursor-pointer"
                   >
                     <span>Записаться</span>
                     <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
+                  </BookingConsultantButton>
                 </div>
               </div>
             </article>
@@ -329,13 +332,15 @@ export default function GalereyaPage() {
                 </div>
               </div>
               <div className="pt-3">
-                <Link
-                  href="/#ai-consultant?service=Бесплатная%20диагностика%20ходовой%20в%20ремзоне"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
+                <BookingConsultantButton
+                  service="Бесплатная диагностика ходовой в ремзоне"
+                  from="Галерея: открытая ремзона"
+                  prompt="Здравствуйте! Хочу записаться на диагностику подвески в боксе на ул. Печёнкина, 1а. Подскажите свободное время."
+                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02] cursor-pointer"
                 >
                   <span>Записаться на осмотр в боксе</span>
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </BookingConsultantButton>
               </div>
             </div>
 

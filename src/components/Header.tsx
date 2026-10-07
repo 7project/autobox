@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Wrench, MessageCircle, Send, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { BookingConsultantButton } from "./BookingConsultantButton";
 
 const navLinks = [
   { href: "/", label: "Главная" },
@@ -57,8 +58,8 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Quick Actions, Theme Toggle & Messengers */}
-          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+          {/* Desktop Quick Actions, Theme Toggle & Messengers */}
+          <div className="hidden xl:flex items-center gap-2.5 shrink-0">
             {/* Social / Messengers Mini-Pills */}
             <div className="flex items-center gap-1.5 pr-2 border-r border-[var(--border)]">
               <a
@@ -96,28 +97,36 @@ export function Header() {
             {/* Phone */}
             <a
               href="tel:+79959277754"
-              className="hidden md:flex items-center gap-1.5 text-xs font-bold text-[var(--foreground)] hover:text-[var(--primary)] transition-colors pl-1"
+              className="flex items-center gap-1.5 text-xs font-bold text-[var(--foreground)] hover:text-[var(--primary)] transition-colors pl-1"
             >
               <Phone className="h-3.5 w-3.5 text-[var(--primary)]" />
               <span>+7 (995) 927-77-54</span>
             </a>
 
             {/* CTA */}
-            <Link
-              href="/#ai-consultant"
-              className="rounded-lg bg-[var(--primary)] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center gap-1.5"
+            <BookingConsultantButton
+              from="Шапка сайта (ПК)"
+              prompt="Здравствуйте! Хочу записаться на диагностику и консультацию в Автобокс74 на ул. Печёнкина, 1а."
+              className="rounded-lg bg-[var(--primary)] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Консультант 24/7</span>
-            </Link>
+            </BookingConsultantButton>
           </div>
 
-          {/* Mobile Right Controls */}
-          <div className="flex sm:hidden items-center gap-2">
+          {/* Mobile & Tablet Right Controls */}
+          <div className="flex xl:hidden items-center gap-2">
+            <a
+              href="tel:+79959277754"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[var(--foreground)] hover:text-[var(--primary)] transition-colors pr-1"
+            >
+              <Phone className="h-3.5 w-3.5 text-[var(--primary)]" />
+              <span>+7 (995) 927-77-54</span>
+            </a>
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)]"
+              className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] bg-[var(--card)]"
               aria-label="Меню"
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -126,7 +135,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile & Tablet Nav Drawer */}
       {mobileOpen && (
         <div className="xl:hidden border-t border-[var(--border)] bg-[var(--background)] px-4 py-4 space-y-2">
           <nav className="flex flex-col space-y-1">
@@ -142,14 +151,15 @@ export function Header() {
             ))}
           </nav>
           <div className="pt-2">
-            <Link
-              href="/#ai-consultant"
+            <BookingConsultantButton
+              from="Мобильное меню"
+              prompt="Здравствуйте! Хочу записаться на диагностику и консультацию в Автобокс74 на ул. Печёнкина, 1а."
               onClick={() => setMobileOpen(false)}
-              className="w-full text-center rounded-lg bg-[var(--primary)] py-2.5 text-sm font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center justify-center gap-1.5"
+              className="w-full text-center rounded-lg bg-[var(--primary)] py-2.5 text-sm font-bold text-white shadow-sm shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="h-4 w-4" />
               <span>AI-Консультант 24/7 (Записаться)</span>
-            </Link>
+            </BookingConsultantButton>
           </div>
           <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between">
             <a
@@ -159,20 +169,33 @@ export function Header() {
               <Phone className="h-4 w-4 text-[var(--primary)]" />
               +7 (995) 927-77-54
             </a>
-            <div className="flex gap-1.5">
+            <div className="flex items-center gap-1.5">
               <a
                 href="https://wa.me/79959277754"
-                className="p-2 rounded-lg bg-[var(--secondary)] text-[#25D366]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-[var(--secondary)] text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
                 title="WhatsApp"
               >
                 <MessageCircle className="h-4 w-4" />
               </a>
               <a
                 href="https://t.me/+79959277754"
-                className="p-2 rounded-lg bg-[var(--secondary)] text-[#229ED9]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-[var(--secondary)] text-[#229ED9] hover:bg-[#229ED9]/10 transition-colors"
                 title="Telegram"
               >
                 <Send className="h-4 w-4" />
+              </a>
+              <a
+                href="https://vk.com/avtoboks74rus"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1.5 rounded-lg bg-[var(--secondary)] text-blue-400 font-bold text-xs hover:bg-blue-400/10 transition-colors"
+                title="ВКонтакте"
+              >
+                VK
               </a>
             </div>
           </div>

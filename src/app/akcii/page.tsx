@@ -18,6 +18,7 @@ import {
   Gauge,
   Percent,
 } from "lucide-react";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 export default function AkciiPage() {
   const [copied, setCopied] = useState(false);
@@ -125,13 +126,15 @@ export default function AkciiPage() {
                     100% выгода
                   </span>
                 </div>
-                <Link
-                  href="/#ai-consultant?promo=Бесплатная%20диагностика%20подвески%20на%20вибростенде%20(0%20₽)"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
+                <BookingConsultantButton
+                  promo="Бесплатная диагностика подвески на вибростенде (0 ₽)"
+                  from="Акции: вибростенд"
+                  prompt="Здравствуйте! Хочу записаться по акции: «Бесплатная диагностика подвески на вибростенде (0 ₽)». Подскажите свободное время."
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/25 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02] cursor-pointer"
                 >
                   <span>Записаться по акции</span>
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </BookingConsultantButton>
               </div>
             </div>
 
@@ -230,13 +233,15 @@ export default function AkciiPage() {
                 <span className="text-2xl sm:text-3xl font-black text-[var(--primary)]">1 900 ₽</span>
                 <span className="text-base text-[var(--muted-foreground)] line-through">2 900 ₽</span>
               </div>
-              <Link
-                href="/#ai-consultant?promo=Пакет%20Сезонное%20ТО%20+%20Компьютерная%20диагностика%20(1%20900%20₽)"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--secondary)] px-5 py-2.5 text-xs sm:text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] border border-[var(--border)] transition-all"
+              <BookingConsultantButton
+                promo="Пакет Сезонное ТО + Компьютерная диагностика (1 900 ₽)"
+                from="Акции: пакет ТО"
+                prompt="Здравствуйте! Хочу записаться по акции: «Пакет Сезонное ТО + Компьютерная диагностика (1 900 ₽)». Подскажите ближайшее свободное окно."
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--secondary)] px-5 py-2.5 text-xs sm:text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] border border-[var(--border)] transition-all cursor-pointer"
               >
                 <span>Выбрать пакет</span>
                 <ArrowRight className="h-3.5 w-3.5 text-[var(--primary)]" />
-              </Link>
+              </BookingConsultantButton>
             </div>
           </article>
 
@@ -284,13 +289,15 @@ export default function AkciiPage() {
             </div>
 
             <div className="pt-6 mt-6 border-t border-slate-200">
-              <Link
-                href="/#ai-consultant?promo=Скидка%2010%%20на%20первый%20визит%20(промокод%20АВТОБОКС2025)"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold shadow-md hover:bg-slate-800 transition-all hover:scale-[1.02]"
+              <BookingConsultantButton
+                promo="Скидка 10% на первый визит (промокод АВТОБОКС2025)"
+                from="Акции: первый визит"
+                prompt="Здравствуйте! Хочу записаться на ремонт с промокодом АВТОБОКС2025 (скидка 10% на первый визит). Подскажите свободное время."
+                className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold shadow-md hover:bg-slate-800 transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <span>Забронировать с промокодом</span>
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </BookingConsultantButton>
             </div>
           </article>
         </div>
@@ -312,13 +319,15 @@ export default function AkciiPage() {
             </p>
           </div>
           <div className="shrink-0">
-            <Link
-              href="/#ai-consultant?promo=Восстановление%204-х%20стоек%20по%20цене%203-х"
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-105"
+            <BookingConsultantButton
+              promo="Восстановление 4-х стоек по цене 3-х"
+              from="Акции: 4 стойки"
+              prompt="Здравствуйте! Хочу записаться по акции: «Восстановление 4-х стоек по цене 3-х». Подскажите свободное время на ул. Печёнкина, 1а."
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-105 cursor-pointer"
             >
               <span>Записаться на 4 стойки</span>
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </BookingConsultantButton>
           </div>
         </article>
       </div>

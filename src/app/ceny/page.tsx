@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Phone, MessageCircle } from "lucide-react";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 export const metadata: Metadata = {
   title: "Цены на ремонт авто в Миассе | Автобокс74rus",
@@ -101,14 +102,15 @@ export default function CenyPage() {
                 <h2 className="text-base sm:text-lg font-bold text-[var(--primary)]">
                   {cat.category}
                 </h2>
-                <Link
-                  href={`/#ai-consultant?service=${encodeURIComponent(cat.category)}`}
-                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all flex items-center gap-1 shrink-0"
+                <BookingConsultantButton
+                  service={cat.category}
+                  from="Прайс-лист / Цены"
+                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all flex items-center gap-1 shrink-0 cursor-pointer"
                   title={`Записаться: ${cat.category}`}
                 >
                   <span>Записаться</span>
                   <ArrowRight className="h-3 w-3" />
-                </Link>
+                </BookingConsultantButton>
               </div>
               <div className="divide-y divide-[var(--border)]">
                 {cat.items.map((item) => (
@@ -153,13 +155,15 @@ export default function CenyPage() {
               <MessageCircle className="h-4 w-4" />
               Написать в WhatsApp
             </a>
-            <Link
-              href="/#ai-consultant?service=Запись%20на%20диагностику%20и%20расчет%20стоимости"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] hover:border-[var(--primary)] transition-all"
+            <BookingConsultantButton
+              service="Диагностика и расчет стоимости"
+              from="Страница цен / Прайс"
+              prompt="Здравствуйте! Хочу записаться на диагностику и точный расчет стоимости ремонта в автосервис Автобокс74."
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] hover:border-[var(--primary)] transition-all cursor-pointer"
             >
               Записаться на диагностику
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </BookingConsultantButton>
           </div>
         </div>
       </div>

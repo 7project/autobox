@@ -13,6 +13,7 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 export const metadata: Metadata = {
   title: "О компании и команда мастеров — Автобокс74rus в Миассе",
@@ -108,13 +109,14 @@ export default function ONasPage() {
             </ul>
 
             <div className="pt-2">
-              <Link
-                href="/#ai-consultant?service=Запись%20на%20осмотр%20и%20консультацию"
-                className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02]"
+              <BookingConsultantButton
+                from="Страница О нас"
+                prompt="Здравствуйте! Хочу записаться на диагностику и консультацию в Автобокс74 на ул. Печёнкина, 1а. Подскажите свободное время."
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <span>Записаться в сервис</span>
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </BookingConsultantButton>
             </div>
           </div>
 

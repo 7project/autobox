@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Star, MessageSquareQuote, ExternalLink, Award, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 export const metadata: Metadata = {
   title: "Отзывы клиентов — Автобокс74rus в Миассе | Оценка 5.0 в 2ГИС",
@@ -148,12 +149,13 @@ export default function OtzyvyPage() {
           <p className="text-sm text-[var(--muted-foreground)] mb-6">
             Запишитесь на осмотр или ремонт в Автобокс74rus на ул. Печёнкина, 1а
           </p>
-          <Link
-            href="/#ai-consultant?service=Запись%20на%20осмотр%20и%20ремонт%20по%20отзывам"
-            className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-8 py-3 text-sm font-semibold text-white shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90"
+          <BookingConsultantButton
+            from="Страница отзывов"
+            prompt="Здравствуйте! Прочитал отзывы и хочу записаться на осмотр и ремонт в ваш автосервис на ул. Печёнкина, 1а. Подскажите свободное время."
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-8 py-3 text-sm font-semibold text-white shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 cursor-pointer"
           >
             Записаться в автосервис
-          </Link>
+          </BookingConsultantButton>
         </div>
       </div>
     </section>

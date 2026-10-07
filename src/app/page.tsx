@@ -19,6 +19,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AiAutoConsultant } from "@/components/AiAutoConsultant";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 const services = [
   {
@@ -85,7 +86,7 @@ export default function HomePage() {
               <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
               Сертифицированный техцентр в Миассе
             </span>
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-mono text-[var(--muted-foreground)]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-mono text-[var(--muted-foreground)]">
               <MapPin className="h-3 w-3 text-[var(--primary)]" />
               ул. Печёнкина, 1а
             </span>
@@ -114,7 +115,7 @@ export default function HomePage() {
                     <Wrench className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs text-[var(--foreground)] font-bold truncate">Опыт мастеров</span>
+                    <span className="text-xs text-[var(--foreground)] font-bold">Опыт мастеров</span>
                     <span className="text-xs font-mono font-bold text-[var(--primary)]">от 10 лет</span>
                   </div>
                 </div>
@@ -124,7 +125,7 @@ export default function HomePage() {
                     <ShieldCheck className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs text-[var(--foreground)] font-bold truncate">Гарантия работ</span>
+                    <span className="text-xs text-[var(--foreground)] font-bold">Гарантия работ</span>
                     <span className="text-xs font-mono font-bold text-[var(--primary)]">до 12 месяцев</span>
                   </div>
                 </div>
@@ -134,7 +135,7 @@ export default function HomePage() {
                     <Clock className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs text-[var(--foreground)] font-bold truncate">Экспресс-осмотр</span>
+                    <span className="text-xs text-[var(--foreground)] font-bold">Экспресс-осмотр</span>
                     <span className="text-xs font-mono font-bold text-[var(--primary)]">за 30 минут</span>
                   </div>
                 </div>
@@ -142,20 +143,23 @@ export default function HomePage() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <Link
-                  href="/#ai-consultant?service=Запись%20на%20диагностику"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--primary)] text-white text-sm font-bold shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 hover:scale-[1.02] transition-transform"
+                <BookingConsultantButton
+                  from="Главный экран"
+                  service="Компьютерная диагностика"
+                  prompt="Здравствуйте! Хочу записаться на диагностику автомобиля в автосервис Автобокс74. Подскажите свободное время."
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--primary)] text-white text-sm font-bold shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 hover:scale-[1.02] transition-transform cursor-pointer"
                 >
                   <Clock className="h-4 w-4" />
                   <span>Записаться на диагностику</span>
-                </Link>
-                <a
-                  href="#ai-consultant"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] text-sm font-bold hover:border-[var(--primary)]/50 transition-colors"
+                </BookingConsultantButton>
+                <BookingConsultantButton
+                  from="AI-расчет стоимости"
+                  prompt="Здравствуйте! Помогите рассчитать ориентировочную стоимость ремонта и запчастей для моего автомобиля."
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] text-sm font-bold hover:border-[var(--primary)]/50 transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-4 w-4 text-[var(--primary)]" />
                   <span>Рассчитать стоимость в AI-чате</span>
-                </a>
+                </BookingConsultantButton>
               </div>
             </div>
 
@@ -203,13 +207,15 @@ export default function HomePage() {
 
                 {/* Quick 1-click booking redirect */}
                 <div className="space-y-2.5">
-                  <Link
-                    href="/#ai-consultant?service=Срочная%20запись%20на%20подъемник"
-                    className="w-full py-3.5 px-4 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-lg"
+                  <BookingConsultantButton
+                    from="Срочная запись"
+                    service="Срочная запись на подъёмник"
+                    prompt="Здравствуйте! Хочу срочно забронировать пост на подъёмнике на сегодня. Какое время свободно?"
+                    className="w-full py-3.5 px-4 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >
                     <span>Забронировать пост в 1 клик</span>
                     <ArrowRight className="h-4 w-4 text-emerald-400" />
-                  </Link>
+                  </BookingConsultantButton>
                 </div>
 
                 <div className="mt-3.5 pt-3 border-t border-slate-200 flex items-center justify-between text-slate-500 text-[11px]">
@@ -341,10 +347,11 @@ export default function HomePage() {
             {services.map((s) => {
               const Icon = s.icon;
               return (
-                <Link
+                <BookingConsultantButton
                   key={s.title}
-                  href={`/#ai-consultant?service=${encodeURIComponent(s.title)}`}
-                  className="group rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6 transition-all hover:border-[var(--primary)]/50 hover:shadow-lg flex flex-col justify-between"
+                  service={s.title}
+                  from="Сетка услуг на главной"
+                  className="group rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6 transition-all hover:border-[var(--primary)]/50 hover:shadow-lg flex flex-col justify-between cursor-pointer"
                   title={`Записаться на ${s.title}`}
                 >
                   <div>
@@ -364,7 +371,7 @@ export default function HomePage() {
                       Записаться →
                     </span>
                   </div>
-                </Link>
+                </BookingConsultantButton>
               );
             })}
           </div>

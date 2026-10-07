@@ -18,6 +18,7 @@ import {
   Search,
   Sparkles,
 } from "lucide-react";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 interface ServiceItem {
   id: string;
@@ -259,13 +260,14 @@ export default function UslugiPage() {
                 <span className="text-xs text-[var(--muted-foreground)] block">Стоимость по акции</span>
                 <span className="text-xl font-black text-[var(--primary)]">0 ₽ вместо 800 ₽</span>
               </div>
-              <Link
-                href="/#ai-consultant?promo=Бесплатная%20диагностика%20подвески"
-                className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-transform active:scale-95"
+              <BookingConsultantButton
+                promo="Бесплатная диагностика подвески"
+                from="Услуги: спецпредложение"
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-transform active:scale-95 cursor-pointer"
               >
                 <span>Записаться</span>
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </BookingConsultantButton>
             </div>
           </div>
 
@@ -289,13 +291,14 @@ export default function UslugiPage() {
                 <span className="text-xs text-[var(--muted-foreground)] block">Экономия до 2 400 ₽</span>
                 <span className="text-xl font-black text-[var(--foreground)]">от 2 400 ₽ за 4 стойки</span>
               </div>
-              <Link
-                href="/#ai-consultant?promo=Прокачка%204%20стоек%20по%20цене%203-х"
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+              <BookingConsultantButton
+                promo="Прокачка 4 стоек по цене 3-х"
+                from="Услуги: спецпредложение"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors cursor-pointer"
               >
                 <span>Забронировать слот</span>
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </BookingConsultantButton>
             </div>
           </div>
         </div>
@@ -399,13 +402,15 @@ export default function UslugiPage() {
                     </div>
                   </div>
 
-                  <Link
-                    href={`/#ai-consultant?service=${encodeURIComponent(service.title)}`}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[var(--primary)] text-white text-xs sm:text-sm font-bold shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-[1.01]"
+                  <BookingConsultantButton
+                    service={service.title}
+                    from="Каталог услуг"
+                    prompt={`Здравствуйте! Хочу записаться на услугу «${service.title}» со скидкой 10%. Какая ориентировочная стоимость и на когда можно записаться?`}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[var(--primary)] text-white text-xs sm:text-sm font-bold shadow-md shadow-[var(--primary)]/20 transition-all hover:bg-[var(--primary)]/90 hover:scale-[1.01] cursor-pointer"
                   >
                     <span>Записаться со скидкой 10%</span>
                     <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  </BookingConsultantButton>
                 </div>
               </article>
             );
@@ -421,19 +426,22 @@ export default function UslugiPage() {
             Опишите проблему нашему AI-консультанту или позвоните прямо мастеру-приемщику в автосервис на ул. Печёнкина, 1а.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/#ai-consultant"
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all"
+            <BookingConsultantButton
+              from="Страница услуг (баннер)"
+              prompt="Здравствуйте! Подскажите, выполняете ли вы ремонт и диагностику для моего автомобиля?"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all cursor-pointer"
             >
               <Sparkles className="h-4 w-4" />
               Спросить AI-консультанта
-            </Link>
-            <Link
-              href="/#ai-consultant?service=Индивидуальный%20расчет%20ремонта"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-3 text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] transition-all"
+            </BookingConsultantButton>
+            <BookingConsultantButton
+              from="Страница услуг (баннер)"
+              service="Индивидуальный расчет ремонта"
+              prompt="Здравствуйте! Хочу записаться на диагностику и индивидуальный расчет стоимости ремонта."
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-3 text-sm font-bold text-[var(--foreground)] hover:border-[var(--primary)] transition-all cursor-pointer"
             >
               Записаться на осмотр
-            </Link>
+            </BookingConsultantButton>
           </div>
         </div>
       </div>

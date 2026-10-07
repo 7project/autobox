@@ -846,7 +846,7 @@ export default function KontaktyPage() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--primary)] font-mono text-xs font-bold">
                   <Sparkles className="h-3.5 w-3.5" />
-                  SMART SYMPTOM MATRIX & BOOKING
+                  ИНТЕЛЛЕКТУАЛЬНЫЙ РАСЧЁТ И БРОНИРОВАНИЕ
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tight mt-2">
                   Интеллектуальный расчёт ремонта и бронь подъёмника
