@@ -28,9 +28,11 @@ import {
   ShieldCheck,
   Disc,
   Zap,
+  Bot,
 } from "lucide-react";
 import { AiAutoConsultant } from "@/components/AiAutoConsultant";
 import { InteractiveMap } from "@/components/InteractiveMap";
+import { BookingConsultantButton } from "@/components/BookingConsultantButton";
 
 interface SymptomPreset {
   id: string;
@@ -583,48 +585,34 @@ export default function KontaktyPage() {
             </div>
           </div>
 
-          {/* Card 4: Messengers */}
+          {/* Card 4: AI Consultant Booking */}
           <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--card)] flex flex-col justify-between group hover:border-[var(--primary)]/50 transition-all">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-11 h-11 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
-                  <MessageCircle className="h-5 w-5" />
+                  <Bot className="h-5 w-5" />
                 </div>
-                <span className="text-[10px] font-mono font-bold text-[var(--muted-foreground)] uppercase">Мессенджеры</span>
+                <span className="text-[10px] font-mono font-bold text-[var(--primary)] uppercase flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" /> 24/7 Онлайн
+                </span>
               </div>
-              <h3 className="text-base font-bold text-[var(--foreground)]">Отправка фото и звуков</h3>
+              <p className="text-[10px] font-mono font-bold text-[var(--muted-foreground)] uppercase">ОНЛАЙН-КОНСУЛЬТАЦИЯ</p>
+              <h3 className="text-base font-bold text-[var(--foreground)] mt-0.5">
+                Записаться через AI-консультанта
+              </h3>
               <p className="mt-2 text-xs text-[var(--muted-foreground)] leading-relaxed">
-                Пришлите аудиозапись стука или видео течи стойки — мастер оценит дефект до вашего приезда.
+                Моментальный расчет стоимости по марке авто, подбор свободного бокса и запись на ул. Печёнкина, 1а без звонков и ожидания.
               </p>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              <a
-                href="https://wa.me/79959277754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center py-2 rounded-xl bg-[var(--secondary)] hover:bg-[#25D366] hover:text-white text-[#25D366] transition-all text-xs font-bold"
+            <div className="mt-5">
+              <BookingConsultantButton
+                from="Контакты: карточка AI-записи"
+                prompt="Здравствуйте! Хочу записаться на диагностику и консультацию в Автобокс74 на ул. Печёнкина, 1а. Подскажите свободное время."
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--primary)] text-white text-xs font-bold shadow-md shadow-[var(--primary)]/20 hover:bg-[var(--primary)]/90 transition-all cursor-pointer"
               >
-                <MessageCircle className="h-4 w-4" />
-                <span className="text-[10px] mt-0.5">WA</span>
-              </a>
-              <a
-                href="https://t.me/+79959277754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center py-2 rounded-xl bg-[var(--secondary)] hover:bg-[#229ED9] hover:text-white text-[#229ED9] transition-all text-xs font-bold"
-              >
-                <Send className="h-4 w-4" />
-                <span className="text-[10px] mt-0.5">TG</span>
-              </a>
-              <a
-                href="https://vk.com/avtoboks74rus"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center py-2 rounded-xl bg-[var(--secondary)] hover:bg-[#4680C2] hover:text-white text-blue-400 transition-all text-xs font-bold"
-              >
-                <span className="text-[13px] font-bold">VK</span>
-                <span className="text-[10px]">ВК</span>
-              </a>
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Записаться через AI</span>
+              </BookingConsultantButton>
             </div>
           </div>
         </div>

@@ -29,19 +29,14 @@ export function navigateToConsultant(options: NavigateToConsultantOptions = {}) 
       ? `Акция: ${options.promo}`
       : options.from || "Запись онлайн";
 
-  // Check if we are on the homepage or on another page
-  const pathname = window.location.pathname;
-  const isHomepage = pathname === "/" || pathname === "";
+  // Check if AI consultant element exists on current page (e.g. homepage or kontakty)
+  const targetElement =
+    document.getElementById("ai-consultant") ||
+    document.getElementById("ai-chat");
 
-  if (isHomepage) {
+  if (targetElement) {
     // 1. Scroll smoothly to AI consultant
-    const targetElement =
-      document.getElementById("ai-consultant") ||
-      document.getElementById("ai-chat");
-
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
 
     // 2. Dispatch custom event to pre-fill input and focus
     window.dispatchEvent(
