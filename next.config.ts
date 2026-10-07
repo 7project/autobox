@@ -15,28 +15,6 @@ const nextConfig: NextConfig = {
         destination: "https://autobox74.ru/:path*",
         permanent: true,
       },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "autobox.ru",
-          },
-        ],
-        destination: "https://autobox74.ru/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.autobox.ru",
-          },
-        ],
-        destination: "https://autobox74.ru/:path*",
-        permanent: true,
-      },
     ];
   },
 };
