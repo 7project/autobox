@@ -213,7 +213,7 @@ export default function HomePage() {
                     prompt="Здравствуйте! Хочу срочно забронировать пост на подъёмнике на сегодня. Какое время свободно?"
                     className="w-full py-3.5 px-4 rounded-xl bg-slate-950 text-white text-xs sm:text-sm font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >
-                    <span>Забронировать пост в 1 клик</span>
+                    <span>Забронировать пост</span>
                     <ArrowRight className="h-4 w-4 text-emerald-400" />
                   </BookingConsultantButton>
                 </div>
