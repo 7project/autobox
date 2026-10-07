@@ -57,11 +57,16 @@ $$;
 ALTER TABLE public.chat_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow anon insert sessions" ON public.chat_sessions;
 CREATE POLICY "Allow anon insert sessions" ON public.chat_sessions FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow anon select sessions" ON public.chat_sessions;
 CREATE POLICY "Allow anon select sessions" ON public.chat_sessions FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow anon update sessions" ON public.chat_sessions;
 CREATE POLICY "Allow anon update sessions" ON public.chat_sessions FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Allow anon insert messages" ON public.chat_messages;
 CREATE POLICY "Allow anon insert messages" ON public.chat_messages FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow anon select messages" ON public.chat_messages;
 CREATE POLICY "Allow anon select messages" ON public.chat_messages FOR SELECT USING (true);
 
 -- 5. Таблица лидов и заявок на запись (с поддержкой Telegram для автобота)
@@ -87,8 +92,11 @@ CREATE INDEX IF NOT EXISTS idx_service_leads_status ON public.service_leads(stat
 CREATE INDEX IF NOT EXISTS idx_service_leads_created ON public.service_leads(created_at DESC);
 
 ALTER TABLE public.service_leads ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon insert leads" ON public.service_leads;
 CREATE POLICY "Allow anon insert leads" ON public.service_leads FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow anon select leads" ON public.service_leads;
 CREATE POLICY "Allow anon select leads" ON public.service_leads FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow anon update leads" ON public.service_leads;
 CREATE POLICY "Allow anon update leads" ON public.service_leads FOR UPDATE USING (true);
 
 -- 6. Таблица согласий на обработку ПДн, оферту и cookies (152-ФЗ РФ и ст. 437 ГК РФ)
@@ -111,6 +119,8 @@ CREATE INDEX IF NOT EXISTS idx_user_consents_phone ON public.user_consents(clien
 CREATE INDEX IF NOT EXISTS idx_user_consents_created ON public.user_consents(created_at DESC);
 
 ALTER TABLE public.user_consents ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon insert consents" ON public.user_consents;
 CREATE POLICY "Allow anon insert consents" ON public.user_consents FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow anon select consents" ON public.user_consents;
 CREATE POLICY "Allow anon select consents" ON public.user_consents FOR SELECT USING (true);
 
