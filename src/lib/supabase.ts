@@ -544,28 +544,29 @@ export async function getSessionContextHistory(
 
 // ---------------------------------------------------------------------------
 // 7. Согласия на обработку ПДн, оферту и куки (152-ФЗ РФ, ст. 437 ГК РФ)
+// Унификация строго по ID сессии (без хранения ФИО и телефона)
 // ---------------------------------------------------------------------------
 export interface UserConsentRecord {
-  clientToken?: string;
-  ipAddress?: string;
-  userAgent?: string;
+  sessionId: string;
   consentPdan: boolean;
   consentOferta: boolean;
   consentCookies: boolean;
-  consentSource: string; // 'cookie_banner', 'ai_consultant', 'contacts_booking', 'legal_page'
-  clientPhone?: string;
-  clientName?: string;
+  status?: "granted" | "revoked";
+  consentSource: string; // 'ai_consultant', 'cookie_banner', 'contacts_matrix', 'oferta_page', 'privacy_policy_page'
+  ipAddress?: string;
+  userAgent?: string;
 }
 
 /**
- * Логирование согласия пользователя:
- * 1. В базу данных Supabase (таблица user_consents)
+ * Логирование и фиксация согласия пользователя:
+ * 1. В базу данных Supabase (таблица user_consents) по ID сессии
  * 2. Локально на серверный диск в файл logs/consents_audit.log (для юридического аудита)
  */
 export async function saveUserConsent(
   record: UserConsentRecord
-): Promise<{ id: string; success: boolean }> {
+): Promise<{ id: string; success: boolean; status: string }> {
   const timestamp = new Date().toISOString();
+  const consentStatus = record.status || (record.consentPdan || record.consentOferta ? "granted" : "revoked");
   let generatedId = "";
 
   // 1. Сохранение в Supabase
@@ -574,16 +575,16 @@ export async function saveUserConsent(
       const { data, error } = await supabaseAdmin
         .from("user_consents")
         .insert({
-          client_token: record.clientToken || null,
-          ip_address: record.ipAddress || null,
-          user_agent: record.userAgent || null,
+          session_id: record.sessionId,
           consent_pdan: Boolean(record.consentPdan),
           consent_oferta: Boolean(record.consentOferta),
           consent_cookies: Boolean(record.consentCookies),
+          status: consentStatus,
           consent_source: record.consentSource || "direct",
-          client_phone: record.clientPhone || null,
-          client_name: record.clientName || null,
+          ip_address: record.ipAddress || null,
+          user_agent: record.userAgent || null,
           created_at: timestamp,
+          updated_at: timestamp,
         })
         .select("id")
         .single();
@@ -611,13 +612,14 @@ export async function saveUserConsent(
       fs.mkdirSync(logDir, { recursive: true });
     }
     const logFilePath = path.join(logDir, "consents_audit.log");
-    const logLine = `[${timestamp}] ID=${generatedId} IP=${record.ipAddress || "-"} TOKEN=${record.clientToken || "-"} SOURCE=${record.consentSource} PDAN=${record.consentPdan} OFERTA=${record.consentOferta} COOKIES=${record.consentCookies} PHONE=${record.clientPhone || "-"} NAME=${record.clientName || "-"}\n`;
+    const logLine = `[${timestamp}] ID=${generatedId} SESSION=${record.sessionId} STATUS=${consentStatus} SOURCE=${record.consentSource} IP=${record.ipAddress || "-"} PDAN=${record.consentPdan} OFERTA=${record.consentOferta} COOKIES=${record.consentCookies}\n`;
     fs.appendFileSync(logFilePath, logLine, "utf-8");
   } catch (fsErr: any) {
     console.warn("[audit log] Failed to write local consents_audit.log:", fsErr.message);
   }
 
-  return { id: generatedId, success: true };
+  return { id: generatedId, success: true, status: consentStatus };
 }
+
 
 

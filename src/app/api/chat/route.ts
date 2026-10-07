@@ -217,14 +217,14 @@ export async function POST(req: NextRequest) {
 
       if (detectedPhone) {
         saveUserConsent({
-          clientToken: token,
+          sessionId: token,
           ipAddress: clientIp,
           userAgent: req.headers.get("user-agent") || "unknown",
           consentPdan: true,
           consentOferta: true,
           consentCookies: true,
+          status: "granted",
           consentSource: "ai_consultant_chat",
-          clientPhone: detectedPhone,
         }).catch((err) => console.warn("[chat API] Consent log error:", err));
       }
     }

@@ -100,22 +100,23 @@ DROP POLICY IF EXISTS "Allow anon update leads" ON public.service_leads;
 CREATE POLICY "Allow anon update leads" ON public.service_leads FOR UPDATE USING (true);
 
 -- 6. Таблица согласий на обработку ПДн, оферту и cookies (152-ФЗ РФ и ст. 437 ГК РФ)
+-- Унификация пользователя строго по ID сессии (без хранения ФИО и телефона)
 CREATE TABLE IF NOT EXISTS public.user_consents (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    client_token TEXT,
-    ip_address TEXT,
-    user_agent TEXT,
+    session_id TEXT NOT NULL, -- ID сессии пользователя (client_token / session_id)
     consent_pdan BOOLEAN NOT NULL DEFAULT false,
     consent_oferta BOOLEAN NOT NULL DEFAULT false,
     consent_cookies BOOLEAN NOT NULL DEFAULT false,
-    consent_source TEXT NOT NULL, -- 'cookie_banner', 'ai_consultant', 'contacts_matrix', 'consent_page', 'direct_form'
-    client_phone TEXT,
-    client_name TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    status TEXT NOT NULL DEFAULT 'granted' CHECK (status IN ('granted', 'revoked')),
+    consent_source TEXT NOT NULL, -- 'ai_consultant', 'cookie_banner', 'contacts_matrix', 'oferta_page', 'privacy_policy_page'
+    ip_address TEXT,
+    user_agent TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_user_consents_token ON public.user_consents(client_token);
-CREATE INDEX IF NOT EXISTS idx_user_consents_phone ON public.user_consents(client_phone);
+CREATE INDEX IF NOT EXISTS idx_user_consents_session ON public.user_consents(session_id);
+CREATE INDEX IF NOT EXISTS idx_user_consents_status ON public.user_consents(status);
 CREATE INDEX IF NOT EXISTS idx_user_consents_created ON public.user_consents(created_at DESC);
 
 ALTER TABLE public.user_consents ENABLE ROW LEVEL SECURITY;
@@ -123,4 +124,7 @@ DROP POLICY IF EXISTS "Allow anon insert consents" ON public.user_consents;
 CREATE POLICY "Allow anon insert consents" ON public.user_consents FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Allow anon select consents" ON public.user_consents;
 CREATE POLICY "Allow anon select consents" ON public.user_consents FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow anon update consents" ON public.user_consents;
+CREATE POLICY "Allow anon update consents" ON public.user_consents FOR UPDATE USING (true);
+
 

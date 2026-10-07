@@ -1,26 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
-import { saveUserConsent } from "@/lib/supabase";
+import { saveUserConsent, supabaseAdmin } from "@/lib/supabase";
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const sessionId = searchParams.get("sessionId") || searchParams.get("clientToken");
+
+    if (!sessionId) {
+      return NextResponse.json({ isGranted: false, status: "unknown" });
+    }
+
+    if (supabaseAdmin) {
+      const { data, error } = await supabaseAdmin
+        .from("user_consents")
+        .select("id, status, consent_pdan, consent_oferta, consent_cookies, created_at")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (!error && data && data.length > 0) {
+        const latest = data[0];
+        const isGranted = latest.status === "granted" && (latest.consent_pdan || latest.consent_oferta);
+        return NextResponse.json({
+          isGranted,
+          status: latest.status,
+          record: latest,
+        });
+      }
+    }
+
+    return NextResponse.json({ isGranted: false, status: "none" });
+  } catch (error: any) {
+    return NextResponse.json({ isGranted: false, error: error.message }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const {
+      sessionId,
+      clientToken,
       consentPdan = false,
       consentOferta = false,
       consentCookies = false,
+      status, // 'granted' | 'revoked'
       consentSource = "website_direct",
-      clientToken,
-      clientPhone,
-      clientName,
     } = body;
 
-    // Check that at least one consent is given
-    if (!consentPdan && !consentOferta && !consentCookies) {
+    const resolvedSessionId = sessionId || clientToken;
+
+    if (!resolvedSessionId) {
       return NextResponse.json(
-        { error: "Не выбрано ни одно согласие" },
+        { error: "Требуется идентификатор сессии (sessionId) для унификации пользователя" },
         { status: 400 }
       );
     }
+
+    const consentStatus =
+      status || (Boolean(consentPdan) || Boolean(consentOferta) ? "granted" : "revoked");
 
     // Extract client IP address
     const forwardedFor = req.headers.get("x-forwarded-for");
@@ -29,22 +67,25 @@ export async function POST(req: NextRequest) {
     const userAgent = req.headers.get("user-agent") || "unknown";
 
     const result = await saveUserConsent({
-      clientToken: clientToken || undefined,
+      sessionId: resolvedSessionId,
+      consentPdan: consentStatus === "granted" ? Boolean(consentPdan) : false,
+      consentOferta: consentStatus === "granted" ? Boolean(consentOferta) : false,
+      consentCookies: Boolean(consentCookies),
+      status: consentStatus,
+      consentSource: String(consentSource),
       ipAddress: clientIp,
       userAgent,
-      consentPdan: Boolean(consentPdan),
-      consentOferta: Boolean(consentOferta),
-      consentCookies: Boolean(consentCookies),
-      consentSource: String(consentSource),
-      clientPhone: clientPhone ? String(clientPhone).trim() : undefined,
-      clientName: clientName ? String(clientName).trim() : undefined,
     });
 
     return NextResponse.json({
       success: true,
       id: result.id,
+      status: result.status,
       timestamp: new Date().toISOString(),
-      message: "Согласие зафиксировано в реестре автосервиса",
+      message:
+        consentStatus === "granted"
+          ? "Согласие успешно зафиксировано в реестре автосервиса"
+          : "Согласие успешно отозвано в реестре автосервиса",
     });
   } catch (error: any) {
     console.error("[api/consent error]:", error);

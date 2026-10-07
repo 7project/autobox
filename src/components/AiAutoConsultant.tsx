@@ -15,7 +15,9 @@ import {
   Coins,
   X,
   AlertCircle,
+  Lock,
 } from "lucide-react";
+import { useUserConsent } from "@/lib/consentClient";
 
 interface Message {
   id: string;
@@ -101,8 +103,8 @@ export function AiAutoConsultant() {
   const [cooldownLeft, setCooldownLeft] = useState<number>(0);
   const [botTrap, setBotTrap] = useState<string>("");
   const [downgradeNotice, setDowngradeNotice] = useState<string | null>(null);
-  // STRICT COMPLIANCE: Unprechecked checkbox by default (false)
-  const [consentChecked, setConsentChecked] = useState<boolean>(false);
+  // STRICT COMPLIANCE: Unified consent state across all pages (cannot be unchecked here)
+  const { isGranted: consentChecked, grantConsent } = useUserConsent();
   const [consentWarning, setConsentWarning] = useState<string | null>(null);
 
   // Stable ref for session token — resolved synchronously, never empty
@@ -975,39 +977,57 @@ export function AiAutoConsultant() {
 
         {/* Strictly Unprechecked Legal Checkbox for 152-FZ & Public Offer */}
         <div className="mt-2.5 pt-2 border-t border-[var(--border)]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-[var(--muted-foreground)]">
-          <label className="flex items-start gap-2 cursor-pointer select-none group">
+          <label className={`flex items-start gap-2 select-none group ${consentChecked ? "cursor-default" : "cursor-pointer"}`}>
             <input
               type="checkbox"
               checked={consentChecked}
+              disabled={consentChecked}
               onChange={(e) => {
-                setConsentChecked(e.target.checked);
-                if (e.target.checked) setConsentWarning(null);
+                if (!consentChecked && e.target.checked) {
+                  grantConsent("ai_consultant");
+                  if (consentWarning) setConsentWarning(null);
+                }
               }}
               className={`mt-0.5 h-3.5 w-3.5 rounded border ${
                 consentWarning && !consentChecked ? "border-red-500 ring-1 ring-red-500/40" : "border-[var(--border)]"
-              } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] cursor-pointer`}
+              } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] ${consentChecked ? "cursor-default opacity-90" : "cursor-pointer"}`}
             />
             <span className="leading-tight group-hover:text-[var(--foreground)] transition-colors">
-              Согласен на обработку{" "}
-              <Link
-                href="/politika-konfidencialnosti"
-                target="_blank"
-                className="text-[var(--primary)] hover:underline"
-              >
-                персональных данных (152-ФЗ)
-              </Link>{" "}
-              и условия{" "}
-              <Link
-                href="/oferta"
-                target="_blank"
-                className="text-[var(--primary)] hover:underline"
-              >
-                Публичной оферты
-              </Link>
+              {consentChecked ? (
+                <span className="text-emerald-400 font-medium">
+                  Согласие зафиксировано • Изменить можно только на странице{" "}
+                  <Link
+                    href="/oferta"
+                    className="text-[var(--primary)] hover:underline font-bold"
+                  >
+                    Оферты
+                  </Link>
+                </span>
+              ) : (
+                <span>
+                  Согласен на обработку{" "}
+                  <Link
+                    href="/politika-konfidencialnosti"
+                    target="_blank"
+                    className="text-[var(--primary)] hover:underline"
+                  >
+                    персональных данных (152-ФЗ)
+                  </Link>{" "}
+                  и условия{" "}
+                  <Link
+                    href="/oferta"
+                    target="_blank"
+                    className="text-[var(--primary)] hover:underline"
+                  >
+                    Публичной оферты
+                  </Link>
+                </span>
+              )}
             </span>
           </label>
-          <span className="text-[10px] text-[var(--muted-foreground)] shrink-0 hidden sm:inline">
-            🔒 152-ФЗ РФ
+          <span className="text-[10px] text-[var(--muted-foreground)] shrink-0 hidden sm:inline flex items-center gap-1">
+            <Lock className="h-3 w-3 text-[var(--primary)]" />
+            {consentChecked ? "Единый статус: Активно" : "152-ФЗ РФ"}
           </span>
         </div>
       </div>

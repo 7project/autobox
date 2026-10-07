@@ -93,15 +93,14 @@ export async function POST(req: NextRequest) {
       const realIp = req.headers.get("x-real-ip");
       const clientIp = (forwardedFor ? forwardedFor.split(",")[0].trim() : realIp) || "127.0.0.1";
       await saveUserConsent({
-        clientToken: `web_${bookingNumber}`,
+        sessionId: (body as any).sessionId || `web_${bookingNumber}`,
         ipAddress: clientIp,
         userAgent: req.headers.get("user-agent") || "unknown",
         consentPdan: true,
         consentOferta: true,
         consentCookies: true,
+        status: "granted",
         consentSource: source || "leads_booking",
-        clientPhone: phone.trim(),
-        clientName: clientName || undefined,
       }).catch((cErr) => console.warn("[leads API] Consent log error:", cErr));
     } catch (dbErr: any) {
       console.error("[leads API] Supabase save error:", dbErr);

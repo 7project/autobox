@@ -3,57 +3,34 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Cookie, ShieldCheck, X } from "lucide-react";
+import { useUserConsent } from "@/lib/consentClient";
 
 export function CookieConsentBanner() {
-  const [visible, setVisible] = useState(false);
+  const { isGranted, grantConsent, isReady } = useUserConsent();
+  const [dismissed, setDismissed] = useState(false);
   // STRICT COMPLIANCE: Unprechecked checkbox by default (false)
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    try {
-      const accepted = localStorage.getItem("autobox_cookies_consent");
-      if (!accepted) {
-        // Small delay so page renders smoothly
-        const timer = setTimeout(() => setVisible(true), 1200);
-        return () => clearTimeout(timer);
-      }
-    } catch {}
-  }, []);
+  // If consent is already granted across the site, don't show the banner at all
+  if (!isReady || isGranted || dismissed) {
+    return null;
+  }
 
   const handleAccept = async () => {
     if (!isChecked) return;
     setIsSubmitting(true);
 
     try {
-      const clientToken =
-        localStorage.getItem("autobox_session_token") ||
-        "cookie_token_" + Math.random().toString(36).substring(2, 9);
-
-      await fetch("/api/consent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          consentCookies: true,
-          consentPdan: true,
-          consentOferta: true,
-          consentSource: "cookie_banner",
-          clientToken,
-        }),
-      }).catch(() => {});
-
-      localStorage.setItem("autobox_cookies_consent", "true");
-      setVisible(false);
+      await grantConsent("cookie_banner");
+      setDismissed(true);
     } catch (e) {
       console.warn("Cookie consent save error:", e);
-      localStorage.setItem("autobox_cookies_consent", "true");
-      setVisible(false);
+      setDismissed(true);
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (!visible) return null;
 
   return (
     <aside
@@ -71,7 +48,7 @@ export function CookieConsentBanner() {
               Файлы Cookie и правовая информация
             </h4>
             <button
-              onClick={() => setVisible(false)}
+              onClick={() => setDismissed(true)}
               className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] p-1 rounded-md transition-colors"
               title="Скрыть уведомление"
               aria-label="Закрыть уведомление о cookie"
@@ -81,7 +58,7 @@ export function CookieConsentBanner() {
           </div>
 
           <p className="mt-1 text-xs text-[var(--muted-foreground)] leading-relaxed">
-            Мы используем файлы cookie и обрабатываем технические данные для бесперебойной работы онлайн-записи, фиксации расчетных смет и диалогов с мастером в соответствии с законодательством РФ.
+            Мы используем файлы cookie и технические данные сессии для работы онлайн-записи и фиксации расчетных смет без сбора лишних персональных данных (152-ФЗ РФ).
           </p>
 
           {/* Strictly Unprechecked Checkbox */}
@@ -94,7 +71,7 @@ export function CookieConsentBanner() {
                 className="mt-0.5 h-4 w-4 rounded border-2 border-[var(--border)] text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] shrink-0 cursor-pointer"
               />
               <span className="text-[11px] sm:text-xs text-[var(--foreground)] leading-tight group-hover:text-[var(--primary)] transition-colors">
-                Я согласен на обработку персональных данных и использование файлов cookie в соответствии с{" "}
+                Я согласен на обработку технических данных и использование файлов cookie в соответствии с{" "}
                 <Link
                   href="/politika-konfidencialnosti"
                   target="_blank"
@@ -131,7 +108,7 @@ export function CookieConsentBanner() {
                 href="/politika-konfidencialnosti"
                 className="hover:text-[var(--foreground)] underline"
               >
-                Подробнее о 152-ФЗ
+                152-ФЗ
               </Link>
               <span>•</span>
               <Link

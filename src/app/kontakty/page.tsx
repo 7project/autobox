@@ -32,6 +32,7 @@ import {
 import { AiAutoConsultant } from "@/components/AiAutoConsultant";
 import { InteractiveMap } from "@/components/InteractiveMap";
 import { BookingConsultantButton } from "@/components/BookingConsultantButton";
+import { useUserConsent } from "@/lib/consentClient";
 
 interface SymptomPreset {
   id: string;
@@ -305,8 +306,8 @@ export default function KontaktyPage() {
   const [bookingResult, setBookingResult] = useState<{ bookingNumber: string; total: number } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // STRICT COMPLIANCE: Unprechecked checkbox by default (false)
-  const [consentChecked, setConsentChecked] = useState(false);
+  // STRICT COMPLIANCE: Unified consent state (cannot be unchecked here)
+  const { isGranted: consentChecked, grantConsent } = useUserConsent();
 
   // Read URL query parameters (e.g. redirected from Services or Promos)
   useEffect(() => {
@@ -1247,38 +1248,55 @@ export default function KontaktyPage() {
 
                 <div className="mt-4 pt-4 border-t border-[var(--border)] space-y-3">
                   {/* Strict Unprechecked Checkbox for 152-FZ & Public Offer */}
-                  <label className="flex items-start gap-2.5 cursor-pointer group select-none">
+                  <label className={`flex items-start gap-2.5 select-none group ${consentChecked ? "cursor-default" : "cursor-pointer"}`}>
                     <input
                       type="checkbox"
                       checked={consentChecked}
+                      disabled={consentChecked}
                       onChange={(e) => {
-                        setConsentChecked(e.target.checked);
-                        if (errorMessage) setErrorMessage(null);
+                        if (!consentChecked && e.target.checked) {
+                          grantConsent("contacts_matrix");
+                          if (errorMessage) setErrorMessage(null);
+                        }
                       }}
                       className={`mt-0.5 h-4 w-4 rounded border-2 ${
                         !consentChecked && errorMessage
                           ? "border-red-500 ring-2 ring-red-500/30"
                           : "border-[var(--border)]"
-                      } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] shrink-0 cursor-pointer`}
+                      } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] shrink-0 ${consentChecked ? "cursor-default opacity-90" : "cursor-pointer"}`}
                     />
                     <span className="text-[11px] text-[var(--muted-foreground)] leading-tight group-hover:text-[var(--foreground)] transition-colors">
-                      Я подтверждаю согласие на обработку моих персональных данных в соответствии со{" "}
-                      <Link
-                        href="/politika-konfidencialnosti"
-                        target="_blank"
-                        className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
-                      >
-                        152-ФЗ
-                      </Link>{" "}
-                      и принимаю условия{" "}
-                      <Link
-                        href="/oferta"
-                        target="_blank"
-                        className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
-                      >
-                        Публичной оферты
-                      </Link>
-                      .
+                      {consentChecked ? (
+                        <span className="text-emerald-400 font-medium">
+                          Согласие подтверждено и зафиксировано в базе • Управление доступно на странице{" "}
+                          <Link
+                            href="/oferta"
+                            className="text-[var(--primary)] underline font-bold"
+                          >
+                            Оферты
+                          </Link>
+                        </span>
+                      ) : (
+                        <span>
+                          Я подтверждаю согласие на обработку моих персональных данных в соответствии со{" "}
+                          <Link
+                            href="/politika-konfidencialnosti"
+                            target="_blank"
+                            className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
+                          >
+                            152-ФЗ
+                          </Link>{" "}
+                          и принимаю условия{" "}
+                          <Link
+                            href="/oferta"
+                            target="_blank"
+                            className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
+                          >
+                            Публичной оферты
+                          </Link>
+                          .
+                        </span>
+                      )}
                     </span>
                   </label>
 
