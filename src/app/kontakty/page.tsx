@@ -305,6 +305,8 @@ export default function KontaktyPage() {
   const [bookingResult, setBookingResult] = useState<{ bookingNumber: string; total: number } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // STRICT COMPLIANCE: Unprechecked checkbox by default (false)
+  const [consentChecked, setConsentChecked] = useState(false);
 
   // Read URL query parameters (e.g. redirected from Services or Promos)
   useEffect(() => {
@@ -375,6 +377,15 @@ export default function KontaktyPage() {
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    // STRICT COMPLIANCE: User must actively check the checkbox themselves
+    if (!consentChecked) {
+      setErrorMessage(
+        "Для записи и фиксации брони необходимо лично подтвердить согласие на обработку персональных данных (152-ФЗ) и условия Оферты."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -393,7 +404,7 @@ export default function KontaktyPage() {
         telegram: telegram.trim() || undefined,
       };
 
-      // 1. Если номер телефона указан — фоново сохраняем также прямой лид в Supabase
+      // 1. Если номер телефона указан — сохраняем прямой лид в Supabase и логируем согласие
       if (phone.trim()) {
         try {
           fetch("/api/leads", {
@@ -411,6 +422,19 @@ export default function KontaktyPage() {
               estimatedParts: currentPartsCost,
               estimatedTotal: totalCost,
               source: "contacts_symptom_matrix_ai_transfer",
+            }),
+          }).catch(() => {});
+
+          fetch("/api/consent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              consentPdan: true,
+              consentOferta: true,
+              consentCookies: true,
+              consentSource: "contacts_symptom_matrix",
+              clientPhone: phone.trim(),
+              clientName: name.trim() || undefined,
             }),
           }).catch(() => {});
         } catch {}
@@ -1222,6 +1246,49 @@ export default function KontaktyPage() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-[var(--border)] space-y-3">
+                  {/* Strict Unprechecked Checkbox for 152-FZ & Public Offer */}
+                  <label className="flex items-start gap-2.5 cursor-pointer group select-none">
+                    <input
+                      type="checkbox"
+                      checked={consentChecked}
+                      onChange={(e) => {
+                        setConsentChecked(e.target.checked);
+                        if (errorMessage) setErrorMessage(null);
+                      }}
+                      className={`mt-0.5 h-4 w-4 rounded border-2 ${
+                        !consentChecked && errorMessage
+                          ? "border-red-500 ring-2 ring-red-500/30"
+                          : "border-[var(--border)]"
+                      } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] shrink-0 cursor-pointer`}
+                    />
+                    <span className="text-[11px] text-[var(--muted-foreground)] leading-tight group-hover:text-[var(--foreground)] transition-colors">
+                      Я подтверждаю согласие на обработку моих персональных данных в соответствии со{" "}
+                      <Link
+                        href="/politika-konfidencialnosti"
+                        target="_blank"
+                        className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
+                      >
+                        152-ФЗ
+                      </Link>{" "}
+                      и принимаю условия{" "}
+                      <Link
+                        href="/oferta"
+                        target="_blank"
+                        className="text-[var(--primary)] underline font-medium hover:text-[var(--primary)]/80"
+                      >
+                        Публичной оферты
+                      </Link>
+                      .
+                    </span>
+                  </label>
+
+                  {errorMessage && (
+                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2 animate-in fade-in">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={handleBookingSubmit}

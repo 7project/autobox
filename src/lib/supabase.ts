@@ -542,3 +542,82 @@ export async function getSessionContextHistory(
   return ctx.history;
 }
 
+// ---------------------------------------------------------------------------
+// 7. Согласия на обработку ПДн, оферту и куки (152-ФЗ РФ, ст. 437 ГК РФ)
+// ---------------------------------------------------------------------------
+export interface UserConsentRecord {
+  clientToken?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  consentPdan: boolean;
+  consentOferta: boolean;
+  consentCookies: boolean;
+  consentSource: string; // 'cookie_banner', 'ai_consultant', 'contacts_booking', 'legal_page'
+  clientPhone?: string;
+  clientName?: string;
+}
+
+/**
+ * Логирование согласия пользователя:
+ * 1. В базу данных Supabase (таблица user_consents)
+ * 2. Локально на серверный диск в файл logs/consents_audit.log (для юридического аудита)
+ */
+export async function saveUserConsent(
+  record: UserConsentRecord
+): Promise<{ id: string; success: boolean }> {
+  const timestamp = new Date().toISOString();
+  let generatedId = "";
+
+  // 1. Сохранение в Supabase
+  if (supabaseAdmin) {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("user_consents")
+        .insert({
+          client_token: record.clientToken || null,
+          ip_address: record.ipAddress || null,
+          user_agent: record.userAgent || null,
+          consent_pdan: Boolean(record.consentPdan),
+          consent_oferta: Boolean(record.consentOferta),
+          consent_cookies: Boolean(record.consentCookies),
+          consent_source: record.consentSource || "direct",
+          client_phone: record.clientPhone || null,
+          client_name: record.clientName || null,
+          created_at: timestamp,
+        })
+        .select("id")
+        .single();
+
+      if (!error && data?.id) {
+        generatedId = data.id;
+      } else if (error) {
+        console.warn("[supabase] user_consents insert error:", error.message);
+      }
+    } catch (e: any) {
+      console.warn("[supabase] saveUserConsent exception:", e.message);
+    }
+  }
+
+  if (!generatedId) {
+    generatedId = "local_" + Math.random().toString(36).substring(2, 10);
+  }
+
+  // 2. Локальная запись в файл logs/consents_audit.log
+  try {
+    const fs = await import("fs");
+    const path = await import("path");
+    const logDir = path.join(process.cwd(), "logs");
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+    const logFilePath = path.join(logDir, "consents_audit.log");
+    const logLine = `[${timestamp}] ID=${generatedId} IP=${record.ipAddress || "-"} TOKEN=${record.clientToken || "-"} SOURCE=${record.consentSource} PDAN=${record.consentPdan} OFERTA=${record.consentOferta} COOKIES=${record.consentCookies} PHONE=${record.clientPhone || "-"} NAME=${record.clientName || "-"}\n`;
+    fs.appendFileSync(logFilePath, logLine, "utf-8");
+  } catch (fsErr: any) {
+    console.warn("[audit log] Failed to write local consents_audit.log:", fsErr.message);
+  }
+
+  return { id: generatedId, success: true };
+}
+
+

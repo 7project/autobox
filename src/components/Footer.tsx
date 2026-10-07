@@ -151,11 +151,23 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[var(--muted-foreground)]">
+        <div className="mt-10 pt-6 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--muted-foreground)]">
           <p>© {new Date().getFullYear()} Автобокс74rus. г. Миасс, Челябинская область.</p>
-          <div className="flex items-center gap-3">
-            <span>ул. Печёнкина, 1а</span>
-            <span>•</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <Link
+              href="/politika-konfidencialnosti"
+              className="hover:text-[var(--primary)] transition-colors"
+            >
+              Политика конфиденциальности (152-ФЗ)
+            </Link>
+            <span className="text-[var(--border)]">•</span>
+            <Link
+              href="/oferta"
+              className="hover:text-[var(--primary)] transition-colors"
+            >
+              Публичная оферта
+            </Link>
+            <span className="text-[var(--border)]">•</span>
             <BookingConsultantButton
               from="Подвал сайта (Footer)"
               prompt="Здравствуйте! Хочу записаться на диагностику и сервис в Автобокс74 на ул. Печёнкина, 1а."

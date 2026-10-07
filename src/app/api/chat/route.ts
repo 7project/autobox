@@ -19,6 +19,7 @@ import {
   resetClientSession,
   saveMessageToSession,
   saveOrUpdateServiceLead,
+  saveUserConsent,
   updateSessionCar,
 } from "@/lib/supabase";
 import { sendLeadNotificationEmail, TARGET_TEST_EMAIL } from "@/lib/mailer";
@@ -213,6 +214,19 @@ export async function POST(req: NextRequest) {
         serviceRequested: userMessage.slice(0, 500),
         notes: notesParts.join(" | "),
       });
+
+      if (detectedPhone) {
+        saveUserConsent({
+          clientToken: token,
+          ipAddress: clientIp,
+          userAgent: req.headers.get("user-agent") || "unknown",
+          consentPdan: true,
+          consentOferta: true,
+          consentCookies: true,
+          consentSource: "ai_consultant_chat",
+          clientPhone: detectedPhone,
+        }).catch((err) => console.warn("[chat API] Consent log error:", err));
+      }
     }
 
     // 4. Build dialogue context:

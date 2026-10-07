@@ -90,3 +90,27 @@ ALTER TABLE public.service_leads ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow anon insert leads" ON public.service_leads FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow anon select leads" ON public.service_leads FOR SELECT USING (true);
 CREATE POLICY "Allow anon update leads" ON public.service_leads FOR UPDATE USING (true);
+
+-- 6. Таблица согласий на обработку ПДн, оферту и cookies (152-ФЗ РФ и ст. 437 ГК РФ)
+CREATE TABLE IF NOT EXISTS public.user_consents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    client_token TEXT,
+    ip_address TEXT,
+    user_agent TEXT,
+    consent_pdan BOOLEAN NOT NULL DEFAULT false,
+    consent_oferta BOOLEAN NOT NULL DEFAULT false,
+    consent_cookies BOOLEAN NOT NULL DEFAULT false,
+    consent_source TEXT NOT NULL, -- 'cookie_banner', 'ai_consultant', 'contacts_matrix', 'consent_page', 'direct_form'
+    client_phone TEXT,
+    client_name TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_consents_token ON public.user_consents(client_token);
+CREATE INDEX IF NOT EXISTS idx_user_consents_phone ON public.user_consents(client_phone);
+CREATE INDEX IF NOT EXISTS idx_user_consents_created ON public.user_consents(created_at DESC);
+
+ALTER TABLE public.user_consents ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow anon insert consents" ON public.user_consents FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow anon select consents" ON public.user_consents FOR SELECT USING (true);
+

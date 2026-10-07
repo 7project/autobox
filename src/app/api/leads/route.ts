@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   isServicePhoneNumber,
   saveOrUpdateServiceLead,
+  saveUserConsent,
 } from "@/lib/supabase";
 import { TARGET_TEST_EMAIL } from "@/lib/mailer";
 import nodemailer from "nodemailer";
@@ -86,6 +87,22 @@ export async function POST(req: NextRequest) {
         preferredTime: preferredTime || undefined,
         notes: notesSummary,
       });
+
+      // 3.1 Фиксация согласия на обработку ПДн и Оферту (152-ФЗ РФ)
+      const forwardedFor = req.headers.get("x-forwarded-for");
+      const realIp = req.headers.get("x-real-ip");
+      const clientIp = (forwardedFor ? forwardedFor.split(",")[0].trim() : realIp) || "127.0.0.1";
+      await saveUserConsent({
+        clientToken: `web_${bookingNumber}`,
+        ipAddress: clientIp,
+        userAgent: req.headers.get("user-agent") || "unknown",
+        consentPdan: true,
+        consentOferta: true,
+        consentCookies: true,
+        consentSource: source || "leads_booking",
+        clientPhone: phone.trim(),
+        clientName: clientName || undefined,
+      }).catch((cErr) => console.warn("[leads API] Consent log error:", cErr));
     } catch (dbErr: any) {
       console.error("[leads API] Supabase save error:", dbErr);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   Bot,
   Send,
@@ -13,6 +14,7 @@ import {
   Sparkles,
   Coins,
   X,
+  AlertCircle,
 } from "lucide-react";
 
 interface Message {
@@ -99,6 +101,9 @@ export function AiAutoConsultant() {
   const [cooldownLeft, setCooldownLeft] = useState<number>(0);
   const [botTrap, setBotTrap] = useState<string>("");
   const [downgradeNotice, setDowngradeNotice] = useState<string | null>(null);
+  // STRICT COMPLIANCE: Unprechecked checkbox by default (false)
+  const [consentChecked, setConsentChecked] = useState<boolean>(false);
+  const [consentWarning, setConsentWarning] = useState<string | null>(null);
 
   // Stable ref for session token — resolved synchronously, never empty
   const tokenRef = useRef<string>(getOrCreateToken());
@@ -334,6 +339,19 @@ export function AiAutoConsultant() {
   const handleSend = useCallback(
     async (userText: string) => {
       if (!userText.trim() || cooldownLeft > 0) return;
+
+      // STRICT COMPLIANCE: If message contains personal contact data (phone number), consent is required
+      const containsPhone = Boolean(
+        userText.match(/(?:\+?[78]\s?\(?\d{3}\)?\s?\d{3}[\s-]?\d{2}[\s-]?\d{2})|(?:\b[78]?\d{10}\b)/)
+      );
+      if (containsPhone && !consentChecked) {
+        setConsentWarning(
+          "Для фиксации контактных данных и бронирования необходимо подтвердить согласие на обработку персональных данных (152-ФЗ) и Оферту в чекбоксе ниже."
+        );
+        return;
+      }
+
+      setConsentWarning(null);
 
       // Запускаем кулдаун на 5 секунд
       setCooldownLeft(5);
@@ -946,6 +964,52 @@ export function AiAutoConsultant() {
             )}
           </button>
         </form>
+
+        {/* Warning if user enters phone/booking without checking consent */}
+        {consentWarning && (
+          <div className="mt-2.5 p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2 animate-in fade-in">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{consentWarning}</span>
+          </div>
+        )}
+
+        {/* Strictly Unprechecked Legal Checkbox for 152-FZ & Public Offer */}
+        <div className="mt-2.5 pt-2 border-t border-[var(--border)]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-[var(--muted-foreground)]">
+          <label className="flex items-start gap-2 cursor-pointer select-none group">
+            <input
+              type="checkbox"
+              checked={consentChecked}
+              onChange={(e) => {
+                setConsentChecked(e.target.checked);
+                if (e.target.checked) setConsentWarning(null);
+              }}
+              className={`mt-0.5 h-3.5 w-3.5 rounded border ${
+                consentWarning && !consentChecked ? "border-red-500 ring-1 ring-red-500/40" : "border-[var(--border)]"
+              } text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] cursor-pointer`}
+            />
+            <span className="leading-tight group-hover:text-[var(--foreground)] transition-colors">
+              Согласен на обработку{" "}
+              <Link
+                href="/politika-konfidencialnosti"
+                target="_blank"
+                className="text-[var(--primary)] hover:underline"
+              >
+                персональных данных (152-ФЗ)
+              </Link>{" "}
+              и условия{" "}
+              <Link
+                href="/oferta"
+                target="_blank"
+                className="text-[var(--primary)] hover:underline"
+              >
+                Публичной оферты
+              </Link>
+            </span>
+          </label>
+          <span className="text-[10px] text-[var(--muted-foreground)] shrink-0 hidden sm:inline">
+            🔒 152-ФЗ РФ
+          </span>
+        </div>
       </div>
     </div>
   );
