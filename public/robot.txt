@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# Запрещаем кликать по кнопкам вызова чата:
+Disallow: /*?prompt=*
+Disallow: /api/
+Sitemap: https://autobox74.ru/sitemap.xml

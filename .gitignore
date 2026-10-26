@@ -195,9 +195,9 @@ CLAUDE.md
 mcp_config.json
 *.mcp.json
 
-# Docker локальные конфигурации
+# Docker локальные конфигурации и дампы образов
 docker-compose.override.yml
 .docker/
-VPS_DEPLOYMENT_GUIDE.md
-CLAUDE.md
+*.tar
+*.tar.gz
 

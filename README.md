@@ -382,3 +382,20 @@ CHAT_IP_MAX_REQUESTS_PER_HOUR=40
 - Секретные ключи API никогда не попадают в клиентский бандл (вызовы OpenRouter и почты происходят строго в изолированном серверном runtime `Next.js`).
 - Контейнеры запускаются под непривилегированным пользователем `nextjs:nodejs` (`UID 1001`).
 - Реализованы лимиты запросов (Rate Limiting) в Nginx и автоматический бан ботов через `fail2ban`.
+
+---
+
+## 🚢 12. Инструкции по развертыванию на VPS
+
+В проекте подготовлены два подробных руководства по деплою в зависимости от мощности вашего сервера:
+
+1. ⚡ **[VPS_LOCAL_BUILD_DEPLOY_GUIDE.md](VPS_LOCAL_BUILD_DEPLOY_GUIDE.md) (РЕКОМЕНДУЕТСЯ ДЛЯ БЮДЖЕТНЫХ VPS):**
+   - Для серверов с **512 МБ – 1 ГБ RAM** (Beget, Timeweb, FirstVDS и др.).
+   - Сборка Docker-образа выполняется локально на вашем ПК (`--platform linux/amd64`).
+   - Передача сжатого образа на сервер по SSH/SCP без нагрузки на процессор и память VPS.
+   - Запуск контейнера через [`docker-compose.prod.yml`](docker-compose.prod.yml) — расход памяти всего **~60-70 МБ RAM**!
+   - Автоматический скрипт деплоя в 1 клик: [`deploy-local.ps1`](deploy-local.ps1) (Windows) или [`deploy-local.sh`](deploy-local.sh) (Linux/macOS).
+
+2. 🚀 **[VPS_DEPLOYMENT_GUIDE.md](VPS_DEPLOYMENT_GUIDE.md) (Классический деплой со сборкой на сервере):**
+   - Для серверов с **2 ГБ+ RAM**.
+   - Прямой `git clone` и сборка Next.js прямо на сервере через `docker compose up -d --build`.
