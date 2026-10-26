@@ -21,9 +21,10 @@ echo "📤 [2/4] Передача сжатого потока через SSH п�
 # Прямой потоковый пайплайн: без сохранения на диск
 docker save "$IMAGE_NAME" | gzip -c | ssh "${USER}@${SERVER}" "gunzip -c | docker load"
 
-echo "🔄 [3/4] Перезапуск контейнера на сервере..."
+echo "🔄 [3/4] Резервное копирование и перезапуск контейнера на сервере..."
 ssh "${USER}@${SERVER}" bash -s <<EOF
 cd "$REMOTE_DIR"
+docker tag "$IMAGE_NAME" autobox74-app:previous 2>/dev/null || true
 docker compose -f docker-compose.prod.yml up -d --no-deps app
 docker compose -f docker-compose.prod.yml exec nginx nginx -s reload 2>/dev/null || docker compose -f docker-compose.prod.yml restart nginx
 docker image prune -f

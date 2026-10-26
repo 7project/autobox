@@ -10,10 +10,21 @@ param(
     [string]$User = "deployer",
     [string]$RemoteDir = "/home/deployer/autobox.ru",
     [string]$ImageName = "autobox74-app:latest",
-    [string]$TarFile = "autobox74-app.tar"
+    [string]$TarFile = "autobox74-app.tar",
+    [switch]$CheckBuild = $false
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($CheckBuild) {
+    Write-Host "`n🔍 [0/5] Предварительная проверка локальной сборки (TypeScript + SSG)..." -ForegroundColor Cyan
+    npm run build
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "❌ Ошибка при предварительной сборке проекта. Исправьте ошибки перед деплоем."
+        exit 1
+    }
+    Write-Host "✅ Предварительная валидация успешно пройдена." -ForegroundColor Green
+}
 
 Write-Host "`n🚀 [1/5] Запуск локальной сборки Docker-образа ($ImageName)..." -ForegroundColor Cyan
 Write-Host "Платформа целевой сборки: linux/amd64 (для Ubuntu VPS)" -ForegroundColor DarkGray
@@ -46,7 +57,11 @@ Write-Host "✅ Архив доставлен на сервер." -ForegroundCol
 Write-Host "`n🔄 [4/5] Применение образа на сервере и перезапуск контейнера..." -ForegroundColor Cyan
 $remoteCommands = @"
 cd $RemoteDir
-echo '-> Загрузка образа в локальный Docker...'
+
+echo '-> Резервное тегирование текущей версии (для возможности отката)...'
+docker tag $ImageName autobox74-app:previous 2>/dev/null || true
+
+echo '-> Загрузка нового образа в локальный Docker...'
 docker load -i $TarFile
 rm -f $TarFile
 
