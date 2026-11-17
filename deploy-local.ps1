@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # AutoBox74 - Скрипт локальной сборки и деплоя на VPS для Windows (PowerShell)
 # ==============================================================================
 # Использование:
@@ -6,9 +6,9 @@
 # ==============================================================================
 
 param(
-    [string]$Server = "159.194.213.100",
-    [string]$User = "deployer",
-    [string]$RemoteDir = "/home/deployer/autobox.ru",
+    [string]$Server = "vps_web",
+    [string]$User = "webmaster",
+    [string]$RemoteDir = "/opt/autobox",
     [string]$ImageName = "autobox74-app:latest",
     [string]$TarFile = "autobox74-app.tar",
     [switch]$CheckBuild = $false
@@ -45,8 +45,9 @@ $tarSizeMB = [math]::Round((Get-Item $TarFile).Length / 1MB, 2)
 Write-Host "✅ Образ сохранен в $TarFile (Размер: $tarSizeMB MB)." -ForegroundColor Green
 
 # 3. Передача архива на сервер через SCP
-Write-Host "`n📤 [3/5] Передача архива на VPS ($User@$Server:$RemoteDir)..." -ForegroundColor Cyan
-scp $TarFile "${User}@${Server}:${RemoteDir}/"
+$targetHost = if ($Server -eq "vps_web") { "vps_web" } else { "${User}@${Server}" }
+Write-Host "`n📤 [3/5] Передача архива на VPS ($targetHost:$RemoteDir)..." -ForegroundColor Cyan
+scp $TarFile "${targetHost}:${RemoteDir}/"
 if ($LASTEXITCODE -ne 0) {
     Write-Error "❌ Ошибка при передаче файла через SCP."
     exit 1
@@ -66,19 +67,19 @@ docker load -i $TarFile
 rm -f $TarFile
 
 echo '-> Запуск/обновление контейнера app без сборки...'
-docker compose -f docker-compose.prod.yml up -d --no-deps app
+docker compose up -d --no-deps app
 
 echo '-> Мягкая перезагрузка Nginx...'
-docker compose -f docker-compose.prod.yml exec nginx nginx -s reload 2>/dev/null || docker compose -f docker-compose.prod.yml restart nginx
+docker exec nginx_main nginx -s reload 2>/dev/null || docker compose exec nginx nginx -s reload 2>/dev/null || true
 
 echo '-> Очистка старых неиспользуемых слоев...'
 docker image prune -f
 
 echo '-> Статус контейнеров:'
-docker compose -f docker-compose.prod.yml ps
+docker ps --filter "name=autobox"
 "@
 
-ssh "${User}@${Server}" $remoteCommands
+ssh $targetHost $remoteCommands
 if ($LASTEXITCODE -ne 0) {
     Write-Error "❌ Ошибка при выполнении команд на удаленном сервере."
     exit 1
