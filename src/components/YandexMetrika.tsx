@@ -2,7 +2,6 @@
 
 import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import Script from "next/script";
 
 export const YANDEX_METRIKA_ID = 113670909;
 
@@ -30,9 +29,8 @@ function MetrikaNavigationTracker() {
 export function YandexMetrika() {
   return (
     <>
-      <Script
-        id="yandex-metrika"
-        strategy="afterInteractive"
+      <script
+        type="text/javascript"
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
